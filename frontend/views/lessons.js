@@ -1,8 +1,11 @@
 // Lessons: what each group covered. The committee records the figures, the routine danced, videos and comments.
 import {
   $, BASE, S, api, attempt, chartBeats, chartFor, confirmTap, danceOf, esc, fmtDate, fmtDay, groupName, hooks,
-  isCommittee, ls, refresh, setAccent, slug, today, uploadVideo, userName, videoBlock,
+  isCommittee, ls, refresh, setAccent, slug, today, uploadVideo, userName, videoBlock, figTag,
 } from "../core.js";
+
+/** A dance's figures for pickers: the ISTD levels, then the figures only the BDC syllabus has. */
+const pickGroups = (d) => [...S.levels.map((L) => [L, d.levels[L]]), ["BDC only", d.bdc.filter((n) => !S.figs.get(d.id + "." + slug(n))?.level)]].filter(([, ns]) => ns.length);
 import { drawFloor, planRoutine, roomFor, roomSelect, routineSegs } from "../floor.js";
 
 const v = { filter: ls.get("lessonFilter", "mine"), comments: {}, picking: false, pickDance: null };
@@ -73,7 +76,7 @@ function renderLesson(el, id) {
   </header>
 
   <div class="sec-title"><span>Figures covered</span>${edit ? `<span class="acts"><button class="btn sm" data-act="pick">${v.picking ? "Done" : "Tick off figures"}</button></span>` : ""}</div>
-  ${figs.length ? `<div class="pf">${figs.map((f) => `<a class="pfc" href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link><span class="medal m-${f.level}"></span> ${esc(f.name)}${l.dance ? "" : ` <span class="small muted">${esc(danceOf(f.dance).name)}</span>`}</a>`).join("")}</div>`
+  ${figs.length ? `<div class="pf">${figs.map((f) => `<a class="pfc" href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link>${f.level ? `<span class="medal m-${f.level}"></span>` : `<span class="bdctag">BDC</span>`} ${esc(f.name)}${l.dance ? "" : ` <span class="small muted">${esc(danceOf(f.dance).name)}</span>`}</a>`).join("")}</div>`
     : `<p class="muted small">No figures ticked off yet.</p>`}
   ${edit && v.picking ? picker(l) : ""}
 
@@ -146,7 +149,7 @@ function picker(l) {
   const d = danceOf(v.pickDance) || S.dances[0];
   return `<div class="panel pad picker">
     <div class="filters">${S.dances.map((x) => `<button data-pick-dance="${x.id}" aria-pressed="${x.id === d.id}">${esc(x.name)}</button>`).join("")}</div>
-    ${S.levels.map((L) => `<div class="pgroup"><h4><span class="medal m-${L}"></span>${L}</h4><div class="pf">${d.levels[L].map((n) => {
+    ${pickGroups(d).map(([L, names]) => `<div class="pgroup"><h4>${L === "BDC only" ? `<span class="bdctag">BDC</span>` : `<span class="medal m-${L}"></span>`}${L}</h4><div class="pf">${names.map((n) => {
       const id = d.id + "." + slug(n), on = l.figures.includes(id);
       return `<button class="pfc tick ${on ? "on" : ""}" data-fig-toggle="${id}" aria-pressed="${on}">${on ? "✓ " : ""}${esc(n)}</button>`;
     }).join("")}</div></div>`).join("")}
@@ -163,11 +166,11 @@ function itemsBlock(l, edit) {
     const f = it.fig && S.figs.get(it.fig), c = it.fig && chartFor(it.fig);
     return `<div class="item lesson"><span class="n mono">${String(n).padStart(2, "0")}</span>
       <div class="fname">${f ? `<a href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link>${esc(f.name)}</a>` : `<b>${esc(it.name)}</b>`}
-        <span class="small muted">${f ? `<span class="medal m-${f.level}"></span> ${f.level}` : ""}${c && d ? ((b) => ` · ${b} bar${b === 1 ? "" : "s"}`)(+(chartBeats(c) / d.bpb).toFixed(1)) : ""}</span></div>
+        <span class="small muted">${f ? figTag(f) : ""}${c && d ? ((b) => ` · ${b} bar${b === 1 ? "" : "s"}`)(+(chartBeats(c) / d.bpb).toFixed(1)) : ""}</span></div>
       ${edit ? `<label class="notes"><span class="sr">Notes</span><input class="input" data-k="notes" data-i="${i}" value="${esc(it.notes || "")}" placeholder="Alignment, timing…"></label>` : `<span class="notes small">${esc(it.notes || "")}</span>`}
       ${acts}</div>`;
   }).join("");
-  const adder = edit ? (d ? `<div class="adder"><select class="input" id="lAddFig" aria-label="Figure to add">${S.levels.map((L) => `<optgroup label="${L}">${d.levels[L].map((nm) => `<option value="${d.id}.${slug(nm)}">${esc(nm)}</option>`).join("")}</optgroup>`).join("")}</select>
+  const adder = edit ? (d ? `<div class="adder"><select class="input" id="lAddFig" aria-label="Figure to add">${pickGroups(d).map(([L, names]) => `<optgroup label="${L}">${names.map((nm) => `<option value="${d.id}.${slug(nm)}">${esc(nm)}</option>`).join("")}</optgroup>`).join("")}</select>
       <button class="btn solid" data-act="add-fig">Add figure</button><select class="input auto" id="lAddMark" aria-label="Floor marker"><option>Long side</option><option>Short side</option><option>Corner</option></select><button class="btn" data-act="add-mark">Add marker</button>
       ${l.figures.length && !l.items.length ? `<button class="btn ghost" data-act="copy-covered">Use the figures covered</button>` : ""}</div>`
     : `<p class="small muted">Pick the lesson's dance above to build the routine.</p>`) : "";

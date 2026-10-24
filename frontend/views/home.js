@@ -1,5 +1,5 @@
 // Home: what Rise & Fall is (for visitors), or your groups' latest lessons, next competitions and routines (members).
-import { BASE, S, danceOf, esc, fmtDay, groupName, isCommittee, myGroupLessons, setAccent, today } from "../core.js";
+import { BASE, S, danceOf, esc, fmtDay, groupName, isCommittee, levelLabel, myGroupLessons, setAccent, today } from "../core.js";
 
 const tiles = () => {
   const row = (style) => `<div class="strip-row"><div class="eyebrow">${style}</div>${S.dances.filter((d) => d.style === style).map((d) =>
@@ -17,7 +17,7 @@ function visitor() {
   return `
   <section class="intro">
     <div class="introcopy">
-      <p>Every ISTD Standard and Latin figure from Bronze to Gold, with step charts laid out like the technique books and animated footprints you can play to the beat.</p>
+      <p>Every ISTD Standard and Latin figure from Bronze to Gold, plus the BDC restricted syllabus, with step charts laid out like the technique books and animated footprints you can play to the beat.</p>
       <div class="row"><a class="btn solid big" href="${BASE}/syllabus" data-link>Browse the syllabus</a><a class="btn big" href="${BASE}/login" data-link>Member sign in</a></div>
     </div>
     <ul class="features">
@@ -51,7 +51,7 @@ function member() {
     </section>
     <section class="panel pad">
       <div class="sec-title flush"><span>Your routines</span><a class="small" href="${BASE}/routines" data-link>All routines</a></div>
-      ${mine.map((r) => { const d = danceOf(r.dance); return `<a class="hrow" href="${BASE}/routines/${r.id}" data-link><span class="dot c-${d.color}"></span><span class="grow">${esc(r.name)}<br><span class="small muted">${esc(d.name)} · ${esc(r.level)}</span></span><span class="small">Practise ▶</span></a>`; }).join("")
+      ${mine.map((r) => { const d = danceOf(r.dance); return `<a class="hrow" href="${BASE}/routines/${r.id}" data-link><span class="dot c-${d.color}"></span><span class="grow">${esc(r.name)}<br><span class="small muted">${esc(d.name)} · ${esc(levelLabel(r))}</span></span><span class="small">Practise ▶</span></a>`; }).join("")
         || `<p class="small muted">None yet. <a href="${BASE}/routines" data-link>Make your first routine</a> and pick your partner.</p>`}
     </section>
   </div>

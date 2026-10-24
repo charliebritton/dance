@@ -1,6 +1,7 @@
 """Claude calls. Every call uses structured JSON output so the app never parses prose."""
 import json
 import logging
+import re
 
 import anthropic
 
@@ -118,7 +119,8 @@ t is the amount turned between the previous step and this one (⅛ = 45, ¼ = 90
 
 
 def draft_chart(dance: dict, fig: dict, existing: dict | None, who: int | None = None) -> dict:
-    prompt = f"Write the chart for the {dance['name']} figure \"{fig['name']}\" ({fig['level']}), for both Man and Lady."
+    where = f"ISTD {fig['level']}" if fig["level"] else "BDC restricted syllabus"
+    prompt = f"Write the chart for the {dance['name']} figure \"{fig['name']}\" ({where}), for both Man and Lady."
     if existing:
         clean = {k: existing.get(k) for k in ("start", "timing", "man", "lady")}
         prompt += ("\n\nThis is the chart we have now. Check it against the book and correct anything wrong:\n"
@@ -138,34 +140,52 @@ def draft_chart(dance: dict, fig: dict, existing: dict | None, who: int | None =
 
 # --- Routine assistant -------------------------------------------------------
 
+ITEM = {
+    "type": "object", "additionalProperties": False, "required": ["kind", "figure", "notes"],
+    "properties": {
+        "kind": {"type": "string", "enum": ["figure", "marker"]},
+        "figure": {"type": "string", "description": "Exact figure name from the list, or the marker label (Long side, Short side, Corner)"},
+        "notes": {"type": "string", "description": "Alignment or a short tip; empty for markers"},
+    }}
+PROPOSAL = {
+    "type": "object", "additionalProperties": False, "required": ["mode", "items"],
+    "properties": {"mode": {"type": "string", "enum": ["replace", "append"]}, "items": {"type": "array", "items": ITEM}},
+}
 CHAT_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": ["reply", "proposal"],
     "properties": {
         "reply": {"type": "string", "description": "Plain text, short paragraphs or numbered lines, no markdown"},
-        "proposal": {"anyOf": [{"type": "null"}, {
-            "type": "object", "additionalProperties": False, "required": ["mode", "items"],
-            "properties": {
-                "mode": {"type": "string", "enum": ["replace", "append"]},
-                "items": {"type": "array", "items": {
-                    "type": "object", "additionalProperties": False, "required": ["kind", "figure", "notes"],
-                    "properties": {
-                        "kind": {"type": "string", "enum": ["figure", "marker"]},
-                        "figure": {"type": "string", "description": "Exact ISTD name, or the marker label (Long side, Short side, Corner)"},
-                        "notes": {"type": "string", "description": "Alignment or a short tip; empty for markers"},
-                    }}},
-            }}]},
+        "proposal": {"anyOf": [{"type": "null"}, PROPOSAL]},
     },
 }
+# Asked for a routine: the proposal can't be left out.
+DRAFT_SCHEMA = {**CHAT_SCHEMA, "properties": {**CHAT_SCHEMA["properties"], "proposal": PROPOSAL}}
 
-CHAT_SYSTEM = """You are an experienced ISTD ballroom and Latin teacher helping a couple plan a competition or medal routine. Use ISTD figure names and technique as in Alex Moore's Ballroom Dancing (Standard) or Walter Laird's Technique of Latin Dancing (Latin): precedes and follows, alignments, amount of turn, the line of dance and floor craft.
+CHAT_SYSTEM = """You are an experienced ballroom and Latin teacher helping a couple plan a competition or medal routine. Use the figure names and technique of Alex Moore's Ballroom Dancing / the ISTD Ballroom Technique (Standard) and Walter Laird's Technique of Latin Dancing (Latin): precedes and follows, alignments, amount of turn, the line of dance and floor craft. The routine is either for the ISTD medal syllabus (Bronze, Silver, Gold) or for the BDC restricted syllabus used in beginner and novice competitions under British Dance Council rules; keep to the figures listed for it.
 
-The routine's dancers share this conversation; messages are labelled with who wrote them. Answer plainly and briefly. Only include a proposal when you are suggesting concrete figures to add or a whole routine, and use figure names exactly as listed so the app can match them. Otherwise set proposal to null."""
+The routine's dancers share this conversation; messages are labelled with who wrote them. Answer plainly and briefly.
+
+When they ask you to draft, write, make, plan or suggest a routine (or "a routine" in any words), write the whole routine straight away as a proposal with mode "replace": don't ask for a brief or more details first. Use their brief if there is one; otherwise assume a typical competition floor, starting on a long side (Standard: facing DW; Latin: in closed hold facing partner), and give one long side, a Corner marker and the short side (Standard), or about 32 to 48 bars of figures that flow into each other (Latin). Mark the floor with Long side, Short side and Corner markers for Standard. Every figure must precede and follow its neighbours correctly at the alignments given. Say in one or two sentences what you assumed, then you may ask one question to refine it.
+
+Include a proposal whenever you suggest concrete figures to add; use the figure names exactly as listed so the app can match them. Otherwise set proposal to null."""
+
+DRAFT_ASK = re.compile(r"\b(draft|write|make|plan|build|create|design|choreograph|put together|come up with|give me|suggest|new)\b.{0,40}\broutine\b"
+                       r"|\broutine\b.{0,20}\b(please|for (me|us))\b", re.I | re.S)
+
+
+def wants_routine(text: str) -> bool:
+    return bool(DRAFT_ASK.search(text or ""))
 
 
 def routine_context(r: dict, charts: dict) -> str:
     d = syllabus.dance(r["dance"])
-    allowed = syllabus.LEVELS[: syllabus.LEVELS.index(r["level"]) + 1]
-    syl = "\n".join(f"{L}: " + "; ".join(d["levels"][L]) for L in allowed)
+    sid = r.get("syllabus") or "istd"
+    syl = syllabus.syllabus(sid)
+    lists = syllabus.allowed(d, sid, r["level"])
+    figs = "\n".join((f"{L}: " if sid == "istd" else "") + "; ".join(names) for L, names in lists.items())
+    scope = (f"ISTD medal syllabus. Stay at {r['level']} or below unless asked." if sid == "istd" else
+             f"{syl['full']} ({syl['source']}): only these figures, danced as charted (alignments, amounts of turn, "
+             "commencing and ending positions); no parts of figures unless the technique books allow it.")
     lines, n = [], 0
     for it in r["items"]:
         if it.get("type") == "mark":
@@ -181,15 +201,18 @@ def routine_context(r: dict, charts: dict) -> str:
         if c:
             chart_lines.append(f"  {syllabus.figure(fid)['name']}: man starts {c['start'].get('man')}, "
                                f"{len(c['man'])} steps, timing {c.get('timing')}")
-    return (f"Dance: {d['name']} ({d['style']}, {d['sig']}, {d['tempo'][0]}–{d['tempo'][1]} bars per minute). "
-            f"Stay at {r['level']} or below unless asked.\n\nISTD {d['name']} figures allowed:\n{syl}\n\n"
+    return (f"Dance: {d['name']} ({d['style']}, {d['sig']}, {d['tempo'][0]}–{d['tempo'][1]} bars per minute). {scope}\n\n"
+            f"{syl['name']} {d['name']} figures allowed:\n{figs}\n\n"
             f"Couple's brief: {r.get('brief') or '(none)'}\n\nCurrent routine (bracketed lines are floor markers):\n"
             + ("\n".join(lines) or "  (empty)")
             + ("\n\nCharts on file:\n" + "\n".join(chart_lines) if chart_lines else ""))
 
 
-def routine_chat(r: dict, charts: dict, history: list[dict], who: int | None = None) -> dict:
-    """history: [{role, content, author}] oldest first, ending with the new user message."""
+def routine_chat(r: dict, charts: dict, history: list[dict], who: int | None = None, draft: bool | None = None) -> dict:
+    """history: [{role, content, author}] oldest first, ending with the new user message.
+    draft: the new message asks for a whole routine (None = decide from its wording), so a proposal is required."""
+    if draft is None:
+        draft = wants_routine(history[-1]["content"])
     msgs = []
     for h in history[-16:]:
         content = f"{h['author']}: {h['content']}" if h["role"] == "user" else h["content"]
@@ -200,4 +223,10 @@ def routine_chat(r: dict, charts: dict, history: list[dict], who: int | None = N
     while msgs and msgs[0]["role"] != "user":
         msgs.pop(0)
     msgs[-1]["content"] = "<routine>\n" + routine_context(r, charts) + "\n</routine>\n\n" + msgs[-1]["content"]
-    return _call(CHAT_SYSTEM, msgs, CHAT_SCHEMA, effort="medium", who=who, purpose="routine:" + r["id"])
+    if draft:
+        msgs[-1]["content"] += "\n\n(Write the complete routine now as a proposal with mode \"replace\".)"
+    out = _call(CHAT_SYSTEM, msgs, DRAFT_SCHEMA if draft else CHAT_SCHEMA, effort="high" if draft else "medium",
+                who=who, purpose="routine:" + r["id"])
+    if draft and not (out.get("proposal") or {}).get("items"):
+        raise Unavailable("Claude didn't come back with a routine, try again")
+    return out

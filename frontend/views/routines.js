@@ -1,14 +1,14 @@
 // Routines: list, editor (figures, floor markers, bars), partner sign-off with "what changed", and the Claude planner.
 import {
   BASE, $, S, api, attempt, chartBeats, chartFor, confirmTap, sliceChart, stepRange, danceOf, esc, fmtDate, hooks, ls, refresh, setAccent, slug,
-  tempoMid, toast, uploadVideo, userName, videoBlock, canUseAI, isAdmin,
+  tempoMid, toast, uploadVideo, userName, videoBlock, canUseAI, isAdmin, figTag, levelLabel, parseSylLevel, routineLists, sylLevelOptions, sylOf,
 } from "../core.js";
 import { drawFloor, planRoutine, roomFor, roomSelect, routineSegs } from "../floor.js";
 
 const v = { id: ls.get("rid", null), chat: {}, sending: false, diff: {}, pendingMsg: "" };
 
+export const DRAFT = "Draft a full routine for us";
 export const QUICK = [
-  "Draft a full routine for one long side and a corner",
   "What can follow the last figure?",
   "Check the flow: precedes, follows and alignments",
   "Make it fit a short side",
@@ -31,7 +31,7 @@ export const canEdit = (r) => (r.example ? isAdmin() : [r.owner_id, r.lead_id, r
 export const myPart = (r) => (r.follow_id === S.me?.id && r.lead_id !== S.me?.id ? "lady" : r.lead_id === S.me?.id ? "man" : null);
 const partnerOf = (r) => (r.lead_id === S.me.id ? r.follow_id : r.follow_id === S.me.id ? r.lead_id : null);
 const memberOptions = (sel) => `<option value="">No partner yet</option>${S.users.filter((u) => u.id !== S.me.id).map((u) =>
-  `<option value="${u.id}" ${u.id === sel ? "selected" : ""}>${esc(u.name)}${u.dance_role !== "both" ? ` (${u.dance_role}s)` : ""}</option>`).join("")}`;
+  `<option value="${u.id}" ${u.id === sel ? "selected" : ""}>${esc(u.name)}${u.dance_role !== "both" ? ` (${u.dance_role}s)` : ""}${u.joined ? "" : " · not joined yet"}</option>`).join("")}`;
 
 export function render(el, params) {
   if (params.id) { v.id = params.id; ls.set("rid", v.id); }
@@ -46,7 +46,7 @@ export function render(el, params) {
         <div class="eyebrow">New routine</div>
         <input class="input" name="name" placeholder="e.g. Bronze Waltz for the medal test" required aria-label="Routine name">
         <div class="row nowrap"><select class="input" name="dance" aria-label="Dance">${S.dances.map((d) => `<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select>
-        <select class="input" name="level" aria-label="Highest level">${S.levels.map((L) => `<option>${L}</option>`).join("")}</select></div>
+        <select class="input" name="syl" aria-label="Syllabus and highest level">${sylLevelOptions(null)}</select></div>
         <label class="field">Partner<select class="input" name="partner_id">${memberOptions(null)}</select></label>
         <fieldset class="choice compact"><legend>I dance</legend><label><input type="radio" name="my_role" value="lead" ${S.me.dance_role !== "follow" ? "checked" : ""}> Lead</label><label><input type="radio" name="my_role" value="follow" ${S.me.dance_role === "follow" ? "checked" : ""}> Follow</label></fieldset>
         <button class="btn solid" type="submit">Create routine</button>
@@ -80,7 +80,7 @@ function cards() {
     const d = danceOf(r.dance), ok = signedOff(r).length, { total } = bars(r), p = partnerOf(r), need = dancersOf(r).length;
     return `<a class="rcard" href="${BASE}/routines/${r.id}" data-link aria-current="${r.id === v.id}"><span class="sw c-${d.color}"></span>
       <span class="nm">${esc(r.name)}</span>
-      <span class="small muted">${esc(d.name)} · ${esc(r.level)} · ${r.items.filter((i) => i.type === "fig").length} figures · ${Math.round(total)} bars</span>
+      <span class="small muted">${esc(d.name)} · ${esc(levelLabel(r))} · ${r.items.filter((i) => i.type === "fig").length} figures · ${Math.round(total)} bars</span>
       ${r.example ? `<span class="small muted">Example for everyone</span>` : `<span class="small">${p ? `With ${esc(userName(p))}` : "No partner yet"} · you ${myPart(r) === "lady" ? "follow" : "lead"}</span>
       <span class="agree ${need === 2 && ok >= 2 ? "yes" : "no"}">${need < 2 ? "Add a partner to sign off" : ok >= 2 ? "✓ Agreed by both" : ok === 1 ? "◐ One sign-off so far" : "○ Not signed off"}</span>`}</a>`;
   }).join("");
@@ -91,7 +91,8 @@ function editor(r) {
   const secs = (total / tempoMid(d)) * 60;
   const ok = signedOff(r), mine = ok.includes(S.me.id);
   const myOld = r.approvals?.[S.me.id];
-  const allowed = S.levels.slice(0, S.levels.indexOf(r.level) + 1);
+  const lists = routineLists(r), syl = sylOf(r.syllabus);
+  const ok_ids = new Set(Object.values(lists).flat().map((nm) => d.id + "." + slug(nm)));
   let n = 0;
   const items = r.items.map((it, i) => {
     const ctrls = `<span class="acts"><button class="iconbtn" data-act="up" data-i="${i}" ${i === 0 ? "disabled" : ""} aria-label="Move up">↑</button><button class="iconbtn" data-act="down" data-i="${i}" ${i === r.items.length - 1 ? "disabled" : ""} aria-label="Move down">↓</button><button class="iconbtn" data-act="del" data-i="${i}" aria-label="Remove">✕</button></span>`;
@@ -99,24 +100,24 @@ function editor(r) {
     n++;
     const f = it.fig && S.figs.get(it.fig), c = it.fig && chartFor(it.fig);
     const auto = c ? +(chartBeats(sliceChart(c, stepRange(it.notes))) / d.bpb).toFixed(2) : "";
-    const high = f && !allowed.includes(f.level);
+    const high = f && !ok_ids.has(f.id);
     return `<div class="item"><span class="n mono">${String(n).padStart(2, "0")}</span>
       <div class="fname">${f ? `<a href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link>${esc(f.name)}</a>` : `<b>${esc(it.name)}</b>`}
-        <span class="small muted">${f ? `<span class="medal m-${f.level}"></span> ${f.level}` : "Not in the ISTD list"}${c ? "" : " · no chart yet"}${high ? ` <span class="warn">· above ${esc(r.level)}</span>` : ""}</span></div>
+        <span class="small muted">${f ? figTag(f) : `Not in the ${esc(syl.name)} list`}${c ? "" : " · no chart yet"}${high ? ` <span class="warn">· ${r.syllabus === "bdc" ? "not in the BDC syllabus" : f.level ? `above ${esc(r.level)}` : "not in the ISTD medal lists"}</span>` : ""}</span></div>
       <label class="bars"><span class="sr">Bars</span><input class="input mono" type="number" min="0" step="0.5" data-k="bars" data-i="${i}" value="${esc(it.bars ?? "")}" placeholder="${auto ? auto + " bars" : "bars"}"></label>
       <label class="notes"><span class="sr">Notes</span><input class="input" data-k="notes" data-i="${i}" value="${esc(it.notes || "")}" placeholder="Alignment, timing, who leads what…"></label>
       ${ctrls}</div>`;
   }).join("");
-  const figOpts = allowed.map((L) => `<optgroup label="${L}">${d.levels[L].map((nm) => `<option value="${d.id}.${slug(nm)}">${esc(nm)}</option>`).join("")}</optgroup>`).join("");
+  const figOpts = Object.entries(lists).map(([L, names]) => `<optgroup label="${r.syllabus === "bdc" ? "BDC restricted syllabus" : L}">${names.map((nm) => `<option value="${d.id}.${slug(nm)}">${esc(nm)}</option>`).join("")}</optgroup>`).join("");
   const diff = v.diff[`${r.id}:${myOld}:${r.rev}`];
   return `
   <section class="panel pad rhead">
-    <div class="row between"><span class="eyebrow">${esc(d.name)} · ISTD up to ${esc(r.level)}${r.example ? " · example" : ""}</span>
+    <div class="row between"><span class="eyebrow">${esc(d.name)} · ${r.syllabus === "bdc" ? "BDC restricted syllabus" : `ISTD up to ${esc(r.level)}`}${r.example ? " · example" : ""}</span>
       <span class="row"><a class="btn sm acc" href="${BASE}/practice/${r.id}" data-link>▶ Practise this routine</a>${r.owner_id === S.me.id || isAdmin() ? `<button class="btn sm ghost danger" data-act="r-del">Delete</button>` : ""}</span></div>
     <input class="title display" id="rName" value="${esc(r.name)}" aria-label="Routine name">
     ${r.example ? "" : `<div class="row"><label class="row small muted">Partner <select class="input auto" id="rPartner">${memberOptions(partnerOf(r))}</select></label>
       <label class="row small muted">I dance <select class="input auto" id="rMyRole"><option value="lead" ${myPart(r) !== "lady" ? "selected" : ""}>Lead</option><option value="follow" ${myPart(r) === "lady" ? "selected" : ""}>Follow</option></select></label></div>`}
-    <div class="row"><label class="row small muted"><abbr class="tip" data-tip="Only figures up to this ISTD medal level are offered, and Claude keeps to them. Bronze is the foundation, Silver and Gold each add harder figures.">Highest level</abbr> <select class="input auto" id="rLevel">${S.levels.map((L) => `<option ${L === r.level ? "selected" : ""}>${L}</option>`).join("")}</select></label></div>
+    <div class="row"><label class="row small muted"><abbr class="tip" data-tip="Only figures in this syllabus are offered, and Claude keeps to them. ISTD: up to the medal level (Bronze is the foundation, Silver and Gold each add harder figures). BDC: the restricted list used in beginner and novice competitions under British Dance Council rules.">Syllabus</abbr> <select class="input auto" id="rLevel">${sylLevelOptions(r)}</select></label></div>
     <div class="tot">
       <div><b class="mono">${r.items.filter((i) => i.type === "fig").length}</b><span>figures</span></div>
       <div><b class="mono">${total % 1 ? total.toFixed(1) : total}</b><span>bars${unknown ? ` + ${unknown} unknown` : ""}</span></div>
@@ -150,12 +151,13 @@ function assistant(r, d) {
     : `<div class="msg cl">${esc(m.content)}</div>${m.proposal ? proposal(r, m) : ""}`).join("");
   return `<section class="ai" aria-label="Plan with Claude">
     <div class="row between"><h2 class="display h3">Plan it with Claude</h2>${log?.length ? `<button class="btn sm ghost onpop" data-act="clear-chat">Clear conversation</button>` : ""}</div>
-    <p>Claude sees this routine, your brief and the ISTD ${esc(d.name)} list up to ${esc(r.level)}. It checks precedes and follows, alignment and floor craft, and proposes figures you can add in one click. You and your partner share this conversation.</p>
-    <label class="field onpop">Brief for Claude<textarea class="input" id="rBrief" placeholder="e.g. Medal test, small hall about 10 × 14 m, start on the long side facing DW, my partner finds the Whisk hard">${esc(r.brief || "")}</textarea></label>
+    <p>Claude sees this routine, your brief and the ${r.syllabus === "bdc" ? `BDC restricted ${esc(d.name)} list` : `ISTD ${esc(d.name)} list up to ${esc(r.level)}`}. Ask it to draft a routine and it writes one straight away (the brief is optional), then checks precedes and follows, alignment and floor craft. Its suggestions go into the routine in one click. You and your partner share this conversation.</p>
+    <label class="field onpop">Brief for Claude <span class="small">optional</span><textarea class="input" id="rBrief" placeholder="e.g. Medal test, small hall about 10 × 14 m, start on the long side facing DW, my partner finds the Whisk hard">${esc(r.brief || "")}</textarea></label>
     ${!canUseAI() ? `${log?.length ? `<div class="log" id="chatLog">${msgs}</div>` : ""}
     <div class="row">${S.requests.some((q) => q.kind === "routine" && q.target === r.id && q.status === "open")
       ? `<span class="badge st">Draft requested. Claude's suggestion will appear here</span>`
-      : `<button class="btn solid" data-act="request-draft">Request a draft from the site admin</button><span class="small">Write your brief above first. Claude is admin-only while costs are worked out.</span>`}</div>` : `
+      : `<button class="btn solid" data-act="request-draft">Request a draft from the site admin</button><span class="small">Add a brief above if you like. Claude is admin-only while costs are worked out.</span>`}</div>` : `
+    <div class="row"><button class="btn solid" data-act="draft" ${v.sending ? "disabled" : ""}>✦ ${r.items.length ? "Draft a new routine" : "Draft the routine"}</button><span class="small">${r.items.length ? "Claude's draft appears below; it only replaces your figures if you choose." : "Uses your brief if you've written one."}</span></div>
     <div class="quick">${QUICK.map((q) => `<button data-ask="${esc(q)}" ${v.sending ? "disabled" : ""}>${esc(q)}</button>`).join("")}</div>
     <div class="log" id="chatLog">${log ? msgs : `<p class="small">Loading the conversation…</p>`}${v.sending ? `<div class="msg me"><span class="by">You</span>${esc(v.pendingMsg)}</div><div class="msg cl thinking">Claude is thinking…</div>` : ""}</div>
     <form class="composer" id="chatForm"><textarea class="input" id="chatIn" placeholder="Ask about this routine…" aria-label="Message to Claude" ${v.sending ? "disabled" : ""}></textarea><button class="btn solid" type="submit" ${v.sending ? "disabled" : ""}>Send</button></form>`}
@@ -165,7 +167,7 @@ function assistant(r, d) {
 function proposal(r, m) {
   const p = m.proposal;
   return `<div class="proposal"><div class="eyebrow">Proposed ${p.mode === "append" ? "additions" : "routine"}</div><ol>${p.items.map((it) =>
-    it.kind === "marker" ? `<li class="pm">${esc(it.figure)}</li>` : `<li><b>${esc(it.figure)}</b>${it.fig ? "" : ` <span class="warn">(not in the ISTD list)</span>`}${it.notes ? ` · ${esc(it.notes)}` : ""}</li>`).join("")}</ol>
+    it.kind === "marker" ? `<li class="pm">${esc(it.figure)}</li>` : `<li><b>${esc(it.figure)}</b>${it.fig ? "" : ` <span class="warn">(not in the figure lists)</span>`}${it.notes ? ` · ${esc(it.notes)}` : ""}</li>`).join("")}</ol>
     <div class="row"><button class="btn sm solid" data-act="use" data-m="${m.id}" data-mode="replace">Replace routine with this</button><button class="btn sm" data-act="use" data-m="${m.id}" data-mode="append">Add to the end</button></div></div>`;
 }
 
@@ -213,10 +215,12 @@ async function save(r, patch, okMsg) {
   if (res) { await refresh(); hooks.render(); }
 }
 
-async function ask(r, text) {
+async function ask(r, text, draft) {
+  const brief = $("#rBrief")?.value;
   v.sending = true; v.pendingMsg = text; rerenderEditor();
-  const log = await attempt(() => api("POST", `/api/routines/${r.id}/chat`, { message: text }));
+  const log = await attempt(() => api("POST", `/api/routines/${r.id}/chat`, { message: text, brief, ...(draft ? { draft: true } : {}) }));
   v.sending = false;
+  if (log && brief !== undefined && brief !== r.brief) await refresh();
   if (log) v.chat[r.id] = log; else delete v.chat[r.id];
   rerenderEditor(); if (!log) loadChat(r.id);
 }
@@ -225,6 +229,7 @@ async function onClick(ev) {
   const t = ev.target.closest("[data-act], [data-ask]"); if (!t) return;
   const r = S.routines.find((x) => x.id === v.id);
   if (t.dataset.ask) { ask(r, t.dataset.ask); return; }
+  if (t.dataset.act === "draft") { ask(r, DRAFT, true); return; }
   const i = +t.dataset.i;
   switch (t.dataset.act) {
     case "up": case "down": {
@@ -274,7 +279,7 @@ function onChange(ev) {
     return;
   }
   if (t.id === "rName") save(r, { name: t.value });
-  else if (t.id === "rLevel") save(r, { level: t.value });
+  else if (t.id === "rLevel") save(r, parseSylLevel(t.value));
   else if (t.id === "rBrief") save(r, { brief: t.value });
   else if (t.dataset.k && t.closest(".item")) {
     const k = t.dataset.k, items = r.items.map((x, i) => (i === +t.dataset.i ? { ...x, [k]: k === "bars" ? (t.value === "" ? null : +t.value) : t.value } : x));
@@ -289,7 +294,7 @@ async function onSubmit(ev) {
   const fm = ev.target, r = S.routines.find((x) => x.id === v.id);
   if (fm.id === "newRoutine") {
     const fd = new FormData(fm);
-    const res = await attempt(() => api("POST", "/api/routines", { name: fd.get("name"), dance: fd.get("dance"), level: fd.get("level"),
+    const res = await attempt(() => api("POST", "/api/routines", { name: fd.get("name"), dance: fd.get("dance"), ...parseSylLevel(fd.get("syl")),
       partner_id: fd.get("partner_id") ? +fd.get("partner_id") : null, my_role: fd.get("my_role") || "lead" }));
     if (res) { await refresh(); history.pushState(null, "", BASE + "/routines/" + res.id); hooks.route(); }
   } else if (fm.id === "chatForm") {

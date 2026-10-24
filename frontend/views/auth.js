@@ -59,14 +59,15 @@ export async function renderJoin(el, token) {
   let inv;
   try { inv = await api("GET", `/api/invites/${encodeURIComponent(token)}`); }
   catch (e) { el.innerHTML = `<section class="authcard panel pad"><h1 class="display">Join Rise &amp; Fall</h1><p class="err">${esc(e.message)}</p></section>`; return; }
-  const pk = passkeysSupported();
+  const pk = passkeysSupported(), p = inv.person;
   el.innerHTML = `<section class="authcard panel pad">
-    <h1 class="display">Join Rise &amp; Fall</h1>
-    <p class="muted">Make an account to keep your own routines, see what your group covered in lessons, watch the videos and check the competitions list.</p>
+    <h1 class="display">${p ? `Welcome, ${esc(p.name)}` : "Join Rise &amp; Fall"}</h1>
+    <p class="muted">${p ? "Your account is ready and waiting: this link is just for you. Check your details, then choose how you'll sign in. Anything you've already been added to, like routines with a partner or your groups, is there when you arrive."
+      : "Make an account to keep your own routines, see what your group covered in lessons, watch the videos and check the competitions list."}</p>
     <form id="joinForm" class="stack">
-      <label class="field">Your name <span class="small">as people in the society know you</span><input class="input" name="name" autocomplete="name" required maxlength="40"></label>
-      ${rolePicker("dance_role", "both")}
-      ${groupPicker(inv.groups, [])}
+      <label class="field">Your name <span class="small">as people in the society know you</span><input class="input" name="name" autocomplete="name" required maxlength="40" value="${esc(p?.name || "")}"></label>
+      ${rolePicker("dance_role", p?.dance_role || "both")}
+      ${groupPicker(inv.groups, p?.groups || [])}
       <div class="pwonly" ${pk ? "hidden" : ""}><label class="field">Password <span class="small">at least 8 characters</span><input class="input" name="password" type="password" autocomplete="new-password" minlength="8"></label></div>
       <button class="btn solid big" type="submit" id="joinBtn">${pk ? "Create account with a passkey" : "Create account"}</button>
       ${pk ? `<p class="small muted">A passkey signs you in with your fingerprint, face or device PIN. No password to remember. <button class="linkish" type="button" id="usePw">Use a password instead</button></p>` : ""}

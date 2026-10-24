@@ -1,9 +1,10 @@
-// Syllabus: dance picker, ISTD figure list, and the figure page (animated footprints, step chart, notes, videos).
+// Syllabus: dance picker, figure list (ISTD medal levels or the BDC restricted syllabus), and the figure page (animated footprints, step chart, notes, videos).
 import { DIRS, DIR_LABELS, MV_OPTS, alignName, drawFrame, makePlayer } from "../engine.js";
 import {
   BASE, $, $$, S, api, attempt, chartBeats, chartFor, confirmTap, danceOf, esc, figByName, figUsage, fmtBeats, fmtDate,
   hooks, layersFor, ls, refresh, roleWord, setAccent, slug, tempoMid, totalTurn, uploadVideo, userName, videoBlock,
   count, footwork, glossed, head, sway, LEVEL_TIPS, canUseAI, coveredIn, fmtDay, groupName, isAdmin, isCommittee, myGroupLessons,
+  figLists,
 } from "../core.js";
 
 const v = { dance: ls.get("dance", "waltz"), fig: null, q: "", step: -1, editing: false, draft: null, ctx: null, drafting: false, comments: {} };
@@ -14,13 +15,15 @@ export function render(el, params) {
   if (params.dance && danceOf(params.dance)) { v.dance = params.dance; ls.set("dance", v.dance); }
   const d = danceOf(v.dance);
   const want = params.fig ? S.figs.get(d.id + "." + params.fig) : null;
-  const next = want?.id || (v.fig && S.figs.get(v.fig)?.dance === d.id ? v.fig : d.id + "." + slug(d.levels.Bronze[0]));
+  const next = want?.id || (v.fig && S.figs.get(v.fig)?.dance === d.id ? v.fig : d.id + "." + slug(Object.values(figLists(d, S.syl))[0][0]));
   if (next !== v.fig) { v.fig = next; v.step = -1; v.editing = false; player.pause(); }
   setAccent(d.id);
   el.innerHTML = `
     <div class="strip" id="strip">${strip()}</div>
     <div class="split">
       <aside class="panel figlist" aria-label="Figures">
+        <div class="sylswitch"><div class="seg" role="group" aria-label="Syllabus">${S.syllabi.map((s) =>
+          `<button type="button" data-syl="${s.id}" aria-pressed="${s.id === S.syl}" title="${esc(s.full)}${s.source ? ` (${esc(s.source)})` : ""}">${s.id === "bdc" ? "BDC syllabus" : "ISTD medals"}</button>`).join("")}</div></div>
         <input class="input" id="figSearch" type="search" placeholder="Search all figures…" aria-label="Search figures" value="${esc(v.q)}">
         <div class="groups" id="figGroups">${figList()}</div>
       </aside>
@@ -48,12 +51,12 @@ function figList() {
   const vids = {}, covered = new Set(myGroupLessons().flatMap((l) => l.figures));
   for (const x of S.videos) if (x.ref.startsWith("fig:")) vids[x.ref.slice(4)] = (vids[x.ref.slice(4)] || 0) + 1;
   const row = (f) => {
-    const c = chartFor(f.id);
+    const c = chartFor(f.id), tag = S.syl === "bdc" || q ? (f.level ? ` <span class="medal m-${f.level}" title="ISTD ${f.level}"></span>` : ` <span class="bdctag" title="Only in the BDC restricted syllabus">BDC</span>`) : "";
     return `<a class="frow" href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link aria-current="${f.id === v.fig}">
       <span class="tick" title="${covered.has(f.id) ? "Covered in your group's lessons" : ""}">${covered.has(f.id) ? "✓" : ""}</span>
-      <span class="nm">${esc(f.name)}${q ? ` <span class="dn">${esc(danceOf(f.dance).name)}</span>` : ""}</span>
+      <span class="nm">${esc(f.name)}${tag}${q ? ` <span class="dn">${esc(danceOf(f.dance).name)}</span>` : ""}</span>
       ${S.verified[f.id] ? `<span class="ic ok" title="Chart checked against the technique book">Checked</span>` : ""}
-      ${c ? `<span class="ic" title="${c.src === "ai" ? "Chart drafted by Claude" : "Has a step chart"}">${c.src === "ai" ? "AI" : "Chart"}</span>` : ""}
+      ${c ? `<span class="ic" title="Has a step chart">Chart</span>` : ""}
       ${vids[f.id] ? `<span class="ic" title="Demo videos">▶ ${vids[f.id]}</span>` : ""}
       ${usage[f.id] ? `<span class="ic" title="In your routines">In ${usage[f.id].size}</span>` : ""}</a>`;
   };
@@ -61,14 +64,16 @@ function figList() {
     const hits = [...S.figs.values()].filter((f) => f.name.toLowerCase().includes(q) || danceOf(f.dance).name.toLowerCase().includes(q));
     return hits.length ? `<div class="fgroup">${hits.slice(0, 80).map(row).join("")}</div>` : `<p class="empty">No figures match “${esc(v.q)}”.</p>`;
   }
-  const d = danceOf(v.dance);
-  return `<p class="lvl-help small muted">Bronze, Silver and Gold are the ISTD medal levels. Each one adds harder figures, and a routine at a level can use every figure up to it.</p>` + S.levels.map((L) => `<div class="fgroup"><h4><span class="medal m-${L}"></span><abbr class="tip" data-tip="${esc(LEVEL_TIPS[L])}">${L}</abbr><span class="muted mono count">${d.levels[L].length}</span></h4>${d.levels[L].map((n) => row(S.figs.get(d.id + "." + slug(n)))).join("")}</div>`).join("");
+  const d = danceOf(v.dance), bdc = S.syl === "bdc";
+  const help = bdc
+    ? `<p class="lvl-help small muted">The BDC restricted syllabus is the list of figures allowed in beginner, novice and juvenile competitions run under British Dance Council rules. It has no medal levels, and figures must be danced as charted. The dot shows a figure's ISTD medal; <span class="bdctag">BDC</span> marks figures that aren't in the ISTD medal lists.</p>`
+    : `<p class="lvl-help small muted">Bronze, Silver and Gold are the ISTD medal levels. Each one adds harder figures, and a routine at a level can use every figure up to it.</p>`;
+  return help + Object.entries(figLists(d, S.syl)).map(([L, names]) => `<div class="fgroup"><h4><span class="medal m-${L}"></span><abbr class="tip" data-tip="${esc(LEVEL_TIPS[L])}">${bdc ? "BDC restricted syllabus" : L}</abbr><span class="muted mono count">${names.length}</span></h4>${names.map((n) => row(S.figs.get(d.id + "." + slug(n)))).join("")}</div>`).join("");
 }
 
 function srcBadge(c) {
-  if (c.src === "ai") return `<span class="badge ai" title="Drafted by Claude. Check it against your technique book.">Drafted by Claude · check it</span>`;
   if (c.src === "edited") return `<span class="badge ed">Edited by ${esc(userName(c.updated_by))}</span>`;
-  return `<span class="badge st" title="Starter chart in the style of the technique books. Check it with your teacher.">Starter chart</span>`;
+  return `<span class="badge st" title="Not yet checked against the technique book. The committee can correct the steps with Edit steps, then mark it as checked.">Not checked yet</span>`;
 }
 function pfChips(danceId, list) {
   if (!list?.length) return `<span class="muted">—</span>`;
@@ -88,10 +93,11 @@ function detail() {
   return `
   <header class="fig-head">
     <div class="min0">
-      <div class="eyebrow">${esc(d.name)} · ISTD ${esc(d.style)}</div>
+      <div class="eyebrow">${esc(d.name)} · ${esc(d.style)}</div>
       <h1 class="display">${esc(f.name)}</h1>
       <div class="chips">
-        <span class="chip"><span class="medal m-${f.level}"></span><abbr class="tip" data-tip="${esc(LEVEL_TIPS[f.level])}">${f.level}</abbr></span>
+        ${f.level ? `<span class="chip"><span class="medal m-${f.level}"></span><abbr class="tip" data-tip="${esc(LEVEL_TIPS[f.level])}">ISTD ${f.level}</abbr></span>` : ""}
+        ${f.bdc ? `<span class="chip"><abbr class="tip" data-tip="${esc(LEVEL_TIPS.Restricted)}">${f.level ? "BDC syllabus" : "BDC syllabus only"}</abbr></span>` : `<span class="chip"><abbr class="tip" data-tip="Not in the BDC restricted list, so not allowed in beginner and novice competitions under BDC rules">Not in BDC list</abbr></span>`}
         <span class="chip mono">${d.sig} · ${d.tempo[0]}–${d.tempo[1]} bars/min</span>
         ${c ? `<span class="chip mono">Timing ${esc(c.timing || "")}</span><span class="chip mono">${bars % 1 ? bars.toFixed(1) : bars} bar${bars === 1 ? "" : "s"}</span>${ver ? `<span class="badge ed" title="Checked against the technique book${ver.by ? " by " + esc(userName(ver.by)) : ""}">✓ Checked${ver.by ? " by " + esc(userName(ver.by)) : ""}</span>` : srcBadge(c)}` : ""}
       </div>
@@ -263,6 +269,13 @@ function callout(k) {
 
 // ── events ────────────────────────────────────────────────────────────
 async function onClick(ev) {
+  const sy = ev.target.closest("[data-syl]");
+  if (sy) {
+    S.syl = sy.dataset.syl; ls.set("syl", S.syl);
+    $("#figGroups").innerHTML = figList();
+    $$("[data-syl]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.syl === S.syl));
+    return;
+  }
   const tr = ev.target.closest("tr[data-step]");
   if (tr && !v.editing) { player.pause(); v.step = +tr.dataset.step; paint(v.step + 0.999); return; }
   const cdel = ev.target.closest("[data-cdel]");
@@ -306,8 +319,9 @@ async function onClick(ev) {
       await attempt(() => api("POST", `/api/charts/${f.id}/draft`), "Claude's chart is saved. Check it against your book");
       v.drafting = false; v.step = -1; await refresh(); hooks.render(); break;
     case "new-routine-with": {
-      const d = danceOf(f.dance);
-      const r = await attempt(() => api("POST", "/api/routines", { name: `${f.level} ${d.name}`, dance: d.id, level: f.level, items: [{ type: "fig", fig: f.id }] }));
+      const d = danceOf(f.dance), bdc = !f.level || (S.syl === "bdc" && f.bdc);
+      const r = await attempt(() => api("POST", "/api/routines", { name: `${bdc ? "BDC" : f.level} ${d.name}`, dance: d.id, syllabus: bdc ? "bdc" : "istd",
+        level: bdc ? "Restricted" : f.level, items: [{ type: "fig", fig: f.id }] }));
       if (r) { await refresh(); history.pushState(null, "", BASE + "/routines/" + r.id); hooks.route(); }
       break;
     }

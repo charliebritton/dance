@@ -9,7 +9,7 @@ import ai
 import auth
 import db
 import syllabus
-from common import charts, clean_items, fig_or_404, load_routine, rid
+from common import charts, clean_items, fig_or_404, load_routine, match_proposal, rid
 
 router = APIRouter()
 Member, Committee, Admin = Depends(auth.member), Depends(auth.committee), Depends(auth.admin)
@@ -275,18 +275,14 @@ def run_request(rq_id: int, u: dict = Admin):
         else:
             with db.tx() as con:
                 r = load_routine(con, rq["target"], u)
-                msg = "Please draft a full routine from our brief." + (f" {rq['note']}" if rq["note"] else "")
+                msg = "Please draft a full routine" + (f": {rq['note']}" if rq["note"] else " from our brief.")
                 con.execute("INSERT INTO chat (routine_id, role, content, user_id, at) VALUES (?,?,?,?,?)",
                             (r["id"], "user", msg, rq["user_id"], db.now()))
                 history = [{"role": h["role"], "content": h["content"], "author": requester["name"] if requester else "Dancer"}
                            for h in con.execute("SELECT * FROM chat WHERE routine_id = ? ORDER BY id", (r["id"],))]
                 ch = charts(con)
-            out = ai.routine_chat(r, ch, history, who=u["id"])
-            proposal = out.get("proposal")
-            for it in (proposal or {}).get("items", []):
-                if it["kind"] == "figure":
-                    f = syllabus.by_name(r["dance"], it["figure"])
-                    it["fig"] = f["id"] if f else None
+            out = ai.routine_chat(r, ch, history, who=u["id"], draft=True)
+            proposal = match_proposal(r, out.get("proposal"))
             with db.tx() as con:
                 con.execute("INSERT INTO chat (routine_id, role, content, proposal, at) VALUES (?,?,?,?,?)",
                             (r["id"], "assistant", out["reply"], json.dumps(proposal) if proposal else None, db.now()))

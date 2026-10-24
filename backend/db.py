@@ -17,6 +17,8 @@ ADDED_COLUMNS = [
     ("routines", "owner_id", "INTEGER"),
     ("routines", "lead_id", "INTEGER"),
     ("routines", "follow_id", "INTEGER"),
+    ("routines", "syllabus", "TEXT NOT NULL DEFAULT 'istd'"),  # istd | bdc
+    ("invites", "user_id", "INTEGER"),                          # a personal link for this (not yet joined) person
 ]
 
 DEFAULT_GROUPS = ["Beginner", "Novice", "Intermediate", "Advanced", "Team"]

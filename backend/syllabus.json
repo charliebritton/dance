@@ -55,7 +55,46 @@
      "Fallaway Reverse and Slip Pivot",
      "Hover Corté"
     ]
-   }
+   },
+   "bdc": [
+    "RF Closed Change",
+    "LF Closed Change",
+    "Natural Turn",
+    "Reverse Turn",
+    "Natural Spin Turn",
+    "Whisk",
+    "Chassé from PP",
+    "Hesitation Change",
+    "Progressive Chassé to Right",
+    "Closed Impetus",
+    "Outside Change",
+    "Reverse Corté",
+    "Back Whisk",
+    "Basic Weave",
+    "Weave in Waltz Time",
+    "Double Reverse Spin",
+    "Drag Hesitation",
+    "Back Lock",
+    "Forward Lock",
+    "Reverse Pivot",
+    "Closed Telemark",
+    "Open Telemark",
+    "Cross Hesitation",
+    "Wing",
+    "Open Impetus",
+    "Weave from PP",
+    "Outside Spin",
+    "Underturned Outside Spin",
+    "Turning Lock",
+    "Turning Lock to Right",
+    "Closed Wing",
+    "Fallaway Reverse and Slip Pivot",
+    "Hover Corté",
+    "Fallaway Natural Turn",
+    "Running Spin Turn",
+    "Fallaway Whisk",
+    "Open Natural Turn from PP"
+   ]
   },
   {
    "id": "foxtrot",
@@ -102,7 +141,44 @@
      "Curved Three Step",
      "Back Feather"
     ]
-   }
+   },
+   "bdc": [
+    "Walk",
+    "Feather Step",
+    "Three Step",
+    "Natural Turn",
+    "Reverse Turn",
+    "Change of Direction",
+    "Closed Impetus and Feather Finish",
+    "Impetus Turn",
+    "Natural Weave",
+    "Basic Weave",
+    "Reverse Wave",
+    "Closed Telemark",
+    "Open Telemark and Feather Ending",
+    "Top Spin",
+    "Hover Feather",
+    "Hover Telemark",
+    "Natural Telemark",
+    "Hover Cross",
+    "Open Telemark, Natural Turn, Outside Swivel and Feather Ending",
+    "Open Impetus",
+    "Weave from PP",
+    "Natural Twist Turn",
+    "Reverse Pivot",
+    "Quick Open Reverse",
+    "Quick Natural Weave from PP",
+    "Curved Feather to Back Feather",
+    "Curved Feather",
+    "Back Feather",
+    "Curved Feather from PP",
+    "Natural Zig-Zag from PP",
+    "Fallaway Reverse and Slip Pivot",
+    "Natural Hover Telemark",
+    "Bounce Fallaway with Weave Ending",
+    "Extended Reverse Wave",
+    "Curved Three Step"
+   ]
   },
   {
    "id": "quickstep",
@@ -151,7 +227,41 @@
      "Tipsy to Left",
      "Hover Corté"
     ]
-   }
+   },
+   "bdc": [
+    "Walk",
+    "Quarter Turn to Right",
+    "Progressive Chassé",
+    "Natural Turn",
+    "Natural Turn with Hesitation",
+    "Natural Pivot Turn",
+    "Natural Spin Turn",
+    "Progressive Chassé to Right",
+    "Forward Lock",
+    "Back Lock",
+    "Reverse Pivot",
+    "Tipple Chassé to Right",
+    "Running Finish",
+    "Double Reverse Spin",
+    "Closed Impetus",
+    "Impetus Turn",
+    "Quick Open Reverse",
+    "Zig-Zag, Back Lock and Running Finish",
+    "Fishtail",
+    "Running Right Turn",
+    "Four Quick Run",
+    "V6",
+    "Closed Telemark",
+    "Tipple Chassé to Left",
+    "Cross Swivel",
+    "Running Cross Chassé",
+    "Passing Natural Turn",
+    "Six Quick Run",
+    "Rumba Cross",
+    "Tipsy to Right",
+    "Tipsy to Left",
+    "Hover Corté"
+   ]
   },
   {
    "id": "tango",
@@ -198,7 +308,37 @@
      "Contra Check",
      "Reverse Pivot"
     ]
-   }
+   },
+   "bdc": [
+    "Walk",
+    "Progressive Side Step",
+    "Progressive Link",
+    "Closed Promenade",
+    "Open Promenade",
+    "Natural Rock Turn",
+    "Rock Turn",
+    "Back Corté",
+    "Basic Reverse Turn",
+    "Open Reverse Turn, Lady Outside",
+    "Open Reverse Turn, Lady in Line",
+    "Progressive Side Step Reverse Turn",
+    "Left Foot and Right Foot Rocks",
+    "Natural Twist Turn",
+    "Natural Promenade Turn",
+    "Promenade Link",
+    "Four Step",
+    "Back Open Promenade",
+    "Outside Swivel",
+    "Fallaway Promenade",
+    "Four Step Change",
+    "Brush Tap",
+    "Natural Promenade Turn to Rock Turn",
+    "Fallaway Four Step",
+    "Chase",
+    "Fallaway Reverse and Slip Pivot",
+    "Five Step",
+    "Mini Five Step"
+   ]
   },
   {
    "id": "viennese",
@@ -227,7 +367,15 @@
      "Natural Fleckerl",
      "Contra Check"
     ]
-   }
+   },
+   "bdc": [
+    "Natural Turn",
+    "Reverse Turn",
+    "Forward Change (Natural to Reverse)",
+    "Forward Change (Reverse to Natural)",
+    "Backward Change (Natural to Reverse)",
+    "Backward Change (Reverse to Natural)"
+   ]
   },
   {
    "id": "chacha",
@@ -280,7 +428,46 @@
      "Follow My Leader",
      "Rope Spinning"
     ]
-   }
+   },
+   "bdc": [
+    "Closed Basic",
+    "Open Basic",
+    "Basic in Place",
+    "Chassés to Left and Right",
+    "Forward and Backward Locks",
+    "Time Steps",
+    "New York",
+    "Spot Turn",
+    "Underarm Turn",
+    "Shoulder to Shoulder",
+    "Hand to Hand",
+    "Three Cha Chas",
+    "Side Steps",
+    "There and Back",
+    "Fan",
+    "Hockey Stick",
+    "Alemana",
+    "Natural Top",
+    "Natural Opening Out Movement",
+    "Closed Hip Twist",
+    "Open Hip Twist",
+    "Reverse Top",
+    "Opening Out from Reverse Top",
+    "Aida",
+    "Spiral",
+    "Curl",
+    "Rope Spinning",
+    "Cross Basic",
+    "Cuban Breaks",
+    "Split Cuban Breaks",
+    "Chase",
+    "Advanced Hip Twist",
+    "Turkish Towel",
+    "Sweetheart",
+    "Follow My Leader",
+    "Hip Twist Spiral",
+    "Open Hip Twist Spiral"
+   ]
   },
   {
    "id": "samba",
@@ -331,7 +518,47 @@
      "Samba Locks",
      "Cruzados Walks and Locks"
     ]
-   }
+   },
+   "bdc": [
+    "Natural Basic Movement",
+    "Reverse Basic Movement",
+    "Side Basic Movement",
+    "Progressive Basic Movement",
+    "Whisks to Right and Left",
+    "Samba Walks in PP",
+    "Side Samba Walk",
+    "Stationary Samba Walks",
+    "Rhythm Bounce",
+    "Travelling Bota Fogos Forward",
+    "Travelling Bota Fogos Back",
+    "Promenade and Counter Promenade Bota Fogos",
+    "Reverse Turn",
+    "Travelling Voltas",
+    "Criss Cross Voltas",
+    "Solo Spot Volta",
+    "Volta Spot Turn",
+    "Continuous Volta Spot Turn",
+    "Side Chassés",
+    "Shadow Travelling Voltas",
+    "Corta Jaca",
+    "Closed Rocks",
+    "Natural Roll",
+    "Open Rocks",
+    "Backward Rocks",
+    "Plait",
+    "Rolling off the Arm",
+    "Argentine Crosses",
+    "Maypole",
+    "Circular Voltas",
+    "Contra Bota Fogos",
+    "Roundabout",
+    "Reverse Roll",
+    "Promenade and Counter Promenade Runs",
+    "Three Step Turn",
+    "Samba Locks",
+    "Cruzados Walks and Locks",
+    "Drop Volta"
+   ]
   },
   {
    "id": "rumba",
@@ -384,7 +611,44 @@
      "Three Alemanas",
      "Hip Twist Spiral"
     ]
-   }
+   },
+   "bdc": [
+    "Closed Basic",
+    "Open Basic",
+    "Basic in Place",
+    "Alternative Basic",
+    "Progressive Walks Forward and Back",
+    "Fan",
+    "Hockey Stick",
+    "New York",
+    "Spot Turn",
+    "Underarm Turn",
+    "Natural Top",
+    "Hand to Hand",
+    "Cucarachas",
+    "Shoulder to Shoulder",
+    "Side Step",
+    "Cuban Rocks",
+    "Alemana",
+    "Opening Out to Right and Left",
+    "Natural Opening Out Movement",
+    "Closed Hip Twist",
+    "Reverse Top",
+    "Open Hip Twist",
+    "Opening Out from Reverse Top",
+    "Aida",
+    "Spiral",
+    "Curl",
+    "Rope Spinning",
+    "Advanced Opening Out Movement",
+    "Sliding Doors",
+    "Fencing",
+    "Three Threes",
+    "Three Alemanas",
+    "Advanced Hip Twist",
+    "Continuous Hip Twist",
+    "Circular Hip Twist"
+   ]
   },
   {
    "id": "paso",
@@ -434,7 +698,41 @@
      "Twists",
      "Chassé Cape"
     ]
-   }
+   },
+   "bdc": [
+    "Basic Movement",
+    "Sur Place",
+    "Chassés to Right and Left",
+    "Drag",
+    "Déplacement (Attack)",
+    "Promenade Link",
+    "Promenade Close",
+    "Écart (Fallaway Whisk)",
+    "Appel",
+    "Huit",
+    "Promenade",
+    "Separation",
+    "Fallaway Ending to Separation",
+    "Sixteen",
+    "Promenade and Counter Promenade",
+    "Grand Circle",
+    "Alternative Entries to PP",
+    "Open Telemark",
+    "Twist Turn",
+    "La Passe",
+    "Banderillas",
+    "Fallaway Reverse Turn",
+    "Coup de Pique",
+    "Left Foot Variation",
+    "Spanish Line",
+    "Flamenco Taps",
+    "Syncopated Separation",
+    "Travelling Spins from PP",
+    "Travelling Spins from CPP",
+    "Fregolina",
+    "Twists",
+    "Chassé Cape"
+   ]
   },
   {
    "id": "jive",
@@ -480,7 +778,63 @@
      "Reverse Whip",
      "Windmill"
     ]
-   }
+   },
+   "bdc": [
+    "Chassés to Left and Right",
+    "Basic in Place",
+    "Fallaway Rock",
+    "Basic in Fallaway",
+    "Fallaway Throwaway",
+    "Link",
+    "Change of Places Right to Left",
+    "Change of Places Left to Right",
+    "Change of Hands Behind Back",
+    "Walks",
+    "Hip Bump",
+    "Whip",
+    "American Spin",
+    "Stop and Go",
+    "Mooch",
+    "Whip Throwaway",
+    "Reverse Whip",
+    "Windmill",
+    "Spanish Arms",
+    "Rolling off the Arm",
+    "Simple Spin",
+    "Miami Special",
+    "Change of Places Right to Left with Double Spin",
+    "Overturned Change of Places Left to Right",
+    "Double Cross Whip",
+    "Curly Whip",
+    "Overturned Fallaway Throwaway",
+    "Shoulder Spin",
+    "Toe Heel Swivels",
+    "Chugging",
+    "Chicken Walks",
+    "Catapult",
+    "Stalking Walks, Flicks and Break"
+   ]
+  }
+ ],
+ "syllabi": [
+  {
+   "id": "istd",
+   "name": "ISTD",
+   "full": "ISTD medal syllabus",
+   "levels": [
+    "Bronze",
+    "Silver",
+    "Gold"
+   ]
+  },
+  {
+   "id": "bdc",
+   "name": "BDC",
+   "full": "BDC restricted syllabus",
+   "levels": [
+    "Restricted"
+   ],
+   "source": "British Dance Council Rules, Appendix 1 (Latin) and Appendix 2 (Ballroom), March 2024"
   }
  ]
 }

@@ -16,8 +16,9 @@ export const ls = {
 export const S = {
   me: null, groups: [], users: [], routines: [], charts: {}, verified: {}, notes: {}, comment_counts: {}, videos: [],
   lessons: [], competitions: [], requests: [],
-  levels: [], dances: [], starter: {}, figs: new Map(),
+  levels: [], syllabi: [], dances: [], starter: {}, figs: new Map(),
   role: ls.get("role", null),
+  syl: ls.get("syl", "istd"),   // which syllabus the figure list shows: "istd" | "bdc"
 };
 // who may do what (the server checks every write too)
 export const isMember = () => !!S.me;
@@ -46,12 +47,38 @@ export async function api(method, path, body) {
 
 export async function loadSyllabus() {
   const syl = await api("GET", "/api/syllabus");
-  S.levels = syl.levels; S.dances = syl.dances; S.starter = syl.charts;
-  for (const d of S.dances) for (const L of S.levels) for (const n of d.levels[L]) {
-    const id = d.id + "." + slug(n);
-    S.figs.set(id, { id, dance: d.id, name: n, level: L, slug: slug(n) });
+  S.levels = syl.levels; S.syllabi = syl.syllabi; S.dances = syl.dances; S.starter = syl.charts;
+  for (const d of S.dances) {
+    for (const L of S.levels) for (const n of d.levels[L]) {
+      const id = d.id + "." + slug(n);
+      S.figs.set(id, { id, dance: d.id, name: n, level: L, bdc: false, slug: slug(n) });
+    }
+    for (const n of d.bdc) {
+      const id = d.id + "." + slug(n), f = S.figs.get(id);
+      if (f) f.bdc = true; else S.figs.set(id, { id, dance: d.id, name: n, level: null, bdc: true, slug: slug(n) });
+    }
   }
 }
+
+// ── syllabi: ISTD medal levels, or the BDC restricted syllabus (one list) ──
+export const sylOf = (id) => S.syllabi.find((s) => s.id === id) || S.syllabi[0];
+/** {level: figure names} for a dance in a syllabus. */
+export const figLists = (d, sid) => (sid === "bdc" ? { Restricted: d.bdc } : d.levels);
+/** The lists a routine may use: its syllabus, up to its level. */
+export function routineLists(r) {
+  const d = danceOf(r.dance), all = figLists(d, r.syllabus), names = Object.keys(all);
+  const upto = names.includes(r.level) ? names.slice(0, names.indexOf(r.level) + 1) : names;
+  return Object.fromEntries(upto.map((L) => [L, all[L]]));
+}
+export const levelLabel = (r) => (r.syllabus === "bdc" ? "BDC syllabus" : r.level);
+/** "ISTD Bronze" / "BDC restricted" as one choice, for routine forms. */
+export const sylLevelOptions = (r) => S.syllabi.flatMap((s) => s.levels.map((L) => {
+  const val = `${s.id}:${L}`, on = r && (r.syllabus || "istd") === s.id && r.level === L;
+  return `<option value="${val}" ${on ? "selected" : ""}>${s.id === "bdc" ? "BDC syllabus" : `${s.name} ${L}`}</option>`;
+})).join("");
+export const parseSylLevel = (v) => { const [syllabus, level] = String(v).split(":"); return { syllabus, level }; };
+/** A figure's medal (ISTD level) or, for figures only in the BDC list, a BDC tag. */
+export const figTag = (f) => (f.level ? `<span class="medal m-${f.level}"></span> ${f.level}` : `<span class="bdctag">BDC</span> BDC only`);
 
 export async function loadMe() {
   const r = await api("GET", "/api/me");
@@ -79,7 +106,7 @@ export const chartFor = (figId) => {
   const c = S.charts[figId];
   if (c) return c;
   const b = S.starter[figId];
-  return b ? { ...b, src: "starter" } : null;
+  return b ? { src: "starter", ...b } : null;
 };
 export const chartBeats = (c) => (c ? (c.man || []).reduce((a, s) => a + (+s.b || 0), 0) : 0);
 export const userName = (id) => (id && id === S.me?.id ? "You" : S.users.find((u) => u.id === id)?.name || "Someone");
@@ -256,6 +283,7 @@ export const LEVEL_TIPS = {
   Bronze: "ISTD Bronze medal: the foundation figures, such as basic turns, changes and chassés. Everything else builds on these.",
   Silver: "ISTD Silver medal: adds figures with more turn, sway and shaping, such as telemarks, wings and hip twists. A Silver routine can also use every Bronze figure.",
   Gold: "ISTD Gold medal: the hardest syllabus figures, such as contra checks, hover corté and advanced hip twists. A Gold routine can use Bronze, Silver and Gold figures.",
+  Restricted: "BDC restricted syllabus: the figures allowed in beginner, novice and juvenile competitions run under British Dance Council rules. One list per dance, no medal levels. Figures must be danced as charted in the technique books.",
 };
 
 /** "Steps 4–6 only" in a routine item's notes → [4, 6]; null when the whole figure is danced. */

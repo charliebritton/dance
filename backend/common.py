@@ -64,6 +64,15 @@ def clean_items(items: list[dict]) -> list[dict]:
     return out
 
 
+def match_proposal(r: dict, proposal: dict | None) -> dict | None:
+    """Attach figure ids to Claude's proposed figures by name (None where it named something not in the lists)."""
+    for it in (proposal or {}).get("items", []):
+        if it["kind"] == "figure":
+            f = syllabus.by_name(r["dance"], it["figure"])
+            it["fig"] = f["id"] if f else None
+    return proposal
+
+
 def fig_or_404(fig_id: str) -> dict:
     f = syllabus.figure(fig_id)
     if not f:

@@ -10,6 +10,7 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel, Field
 
 import accounts
@@ -18,12 +19,14 @@ import auth
 import db
 import society
 import syllabus
-from common import can_edit_routine, can_see_routine, charts, clean_items, fig_or_404, load_routine, rid, routine_row
+from common import (can_edit_routine, can_see_routine, charts, clean_items, fig_or_404, load_routine, match_proposal, rid,
+                    routine_row)
 from config import ROOT, settings
 
 logging.basicConfig(level=logging.INFO)
 FRONTEND = ROOT / "frontend"
 app = FastAPI(title="Rise & Fall", docs_url=None, redoc_url=None)
+app.add_middleware(GZipMiddleware, minimum_size=2048)   # the syllabus with every chart is ~300 KB of JSON
 db.init()
 settings.upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -49,7 +52,7 @@ app.include_router(society.router)
 
 @app.get("/api/syllabus")
 def get_syllabus():
-    return {"levels": syllabus.LEVELS, "dances": syllabus.DANCES, "charts": syllabus.STARTER}
+    return {"levels": syllabus.LEVELS, "syllabi": syllabus.SYLLABI, "dances": syllabus.DANCES, "charts": syllabus.STARTER}
 
 
 @app.get("/api/state")
@@ -70,8 +73,9 @@ def state(u: dict | None = Viewer):
         for r in routines:
             r["approvals"] = approvals.get(r["id"], {})
         members = []
-        for m in con.execute("SELECT id, name, role, dance_role FROM users ORDER BY name"):
-            members.append(dict(m) | {"groups": [g[0] for g in con.execute(
+        for m in con.execute("SELECT id, name, role, dance_role, pw_hash <> '' OR EXISTS (SELECT 1 FROM passkeys"
+                             " WHERE user_id = users.id) AS joined FROM users ORDER BY name"):
+            members.append(dict(m) | {"joined": bool(m["joined"]), "groups": [g[0] for g in con.execute(
                 "SELECT group_id FROM user_groups WHERE user_id = ?", (m["id"],))]})
         videos = [dict(v) for v in con.execute("SELECT * FROM videos ORDER BY created_at")
                   if not v["ref"].startswith("routine:") or v["ref"][8:] in seen]
@@ -96,6 +100,7 @@ def state(u: dict | None = Viewer):
 class RoutineIn(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     dance: str
+    syllabus: str = "istd"         # "istd" (Bronze/Silver/Gold) or "bdc" (one "Restricted" list)
     level: str = "Bronze"
     items: list[dict] = []
     partner_id: int | None = None
@@ -105,6 +110,7 @@ class RoutineIn(BaseModel):
 class RoutinePatch(BaseModel):
     base_rev: int
     name: str | None = Field(None, max_length=120)
+    syllabus: str | None = None
     level: str | None = None
     brief: str | None = Field(None, max_length=2000)
     items: list[dict] | None = None
@@ -121,18 +127,31 @@ def _parts(con, me: int, partner_id: int | None, my_role: str) -> tuple:
     return (me, partner_id) if my_role == "lead" else (partner_id, me)
 
 
+def _check_level(sid: str, level: str | None) -> str:
+    """The level to store for a routine in syllabus `sid`: BDC has the one "Restricted" list."""
+    syl = syllabus.syllabus(sid)
+    if not syl:
+        raise HTTPException(400, "Unknown syllabus")
+    if level not in syl["levels"]:
+        if len(syl["levels"]) == 1 or level is None:
+            return syl["levels"][0]
+        raise HTTPException(400, "Unknown level")
+    return level
+
+
 @app.post("/api/routines")
 def create_routine(body: RoutineIn, u: dict = Member):
-    if not syllabus.dance(body.dance) or body.level not in syllabus.LEVELS:
-        raise HTTPException(400, "Unknown dance or level")
+    if not syllabus.dance(body.dance):
+        raise HTTPException(400, "Unknown dance")
+    level = _check_level(body.syllabus, body.level)
     items, t, new_id = clean_items(body.items), db.now(), rid()
     with db.tx() as con:
         lead, follow = _parts(con, u["id"], body.partner_id, body.my_role)
-        con.execute("INSERT INTO routines (id,name,dance,level,items,rev,created_by,updated_by,created_at,updated_at,"
-                    "owner_id,lead_id,follow_id) VALUES (?,?,?,?,?,1,?,?,?,?,?,?,?)",
-                    (new_id, body.name.strip(), body.dance, body.level, json.dumps(items), u["id"], u["id"], t, t,
+        con.execute("INSERT INTO routines (id,name,dance,syllabus,level,items,rev,created_by,updated_by,created_at,updated_at,"
+                    "owner_id,lead_id,follow_id) VALUES (?,?,?,?,?,?,1,?,?,?,?,?,?,?)",
+                    (new_id, body.name.strip(), body.dance, body.syllabus, level, json.dumps(items), u["id"], u["id"], t, t,
                      u["id"], lead, follow))
-        con.execute("INSERT INTO routine_versions VALUES (?,?,?,?,?,?)", (new_id, 1, json.dumps(items), body.level, u["id"], t))
+        con.execute("INSERT INTO routine_versions VALUES (?,?,?,?,?,?)", (new_id, 1, json.dumps(items), level, u["id"], t))
     return {"id": new_id}
 
 
@@ -140,22 +159,22 @@ def create_routine(body: RoutineIn, u: dict = Member):
 def patch_routine(routine_id: str, body: RoutinePatch, u: dict = Member):
     with db.tx() as con:
         r = load_routine(con, routine_id, u, edit=True)
-        content_change = body.items is not None or (body.level is not None and body.level != r["level"])
+        sid = body.syllabus or r["syllabus"]
+        level = _check_level(sid, body.level or (r["level"] if sid == r["syllabus"] else None))
+        content_change = body.items is not None or level != r["level"] or sid != r["syllabus"]
         if content_change and body.base_rev != r["rev"]:
             raise HTTPException(409, "Your partner changed this routine a moment ago. It's been reloaded, so make your change again")
-        if body.level is not None and body.level not in syllabus.LEVELS:
-            raise HTTPException(400, "Unknown level")
         lead, follow = r["lead_id"], r["follow_id"]
         if body.my_role is not None:
             lead, follow = _parts(con, u["id"], body.partner_id, body.my_role)
-        new = {"name": (body.name or r["name"]).strip() or "Untitled routine", "level": body.level or r["level"],
+        new = {"name": (body.name or r["name"]).strip() or "Untitled routine", "level": level,
                "brief": r["brief"] if body.brief is None else body.brief,
                "items": clean_items(body.items) if body.items is not None else r["items"]}
         rev = r["rev"] + 1 if content_change else r["rev"]
         t = db.now()
-        con.execute("UPDATE routines SET name=?, level=?, brief=?, items=?, rev=?, updated_by=?, updated_at=?, lead_id=?,"
-                    " follow_id=? WHERE id=?",
-                    (new["name"], new["level"], new["brief"], json.dumps(new["items"]), rev, u["id"], t, lead, follow, routine_id))
+        con.execute("UPDATE routines SET name=?, syllabus=?, level=?, brief=?, items=?, rev=?, updated_by=?, updated_at=?,"
+                    " lead_id=?, follow_id=? WHERE id=?",
+                    (new["name"], sid, new["level"], new["brief"], json.dumps(new["items"]), rev, u["id"], t, lead, follow, routine_id))
         if content_change:
             con.execute("INSERT OR REPLACE INTO routine_versions VALUES (?,?,?,?,?,?)",
                         (routine_id, rev, json.dumps(new["items"]), new["level"], u["id"], t))
@@ -221,6 +240,8 @@ def get_chat(routine_id: str, u: dict = Member):
 
 class ChatIn(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
+    brief: str | None = Field(None, max_length=2000)   # saved first, so a brief typed just now is used
+    draft: bool | None = None                          # True: always answer with a whole routine
 
 
 @app.post("/api/routines/{routine_id}/chat")
@@ -228,6 +249,9 @@ def post_chat(routine_id: str, body: ChatIn, u: dict = Member):
     auth.check_ai(u)
     with db.tx() as con:
         r = load_routine(con, routine_id, u)
+        if body.brief is not None and body.brief != r["brief"] and can_edit_routine(r, u):
+            con.execute("UPDATE routines SET brief = ? WHERE id = ?", (body.brief, routine_id))
+            r["brief"] = body.brief
         con.execute("INSERT INTO chat (routine_id, role, content, user_id, at) VALUES (?,?,?,?,?)",
                     (routine_id, "user", body.message.strip(), u["id"], db.now()))
         names = {x["id"]: x["name"] for x in con.execute("SELECT id, name FROM users")}
@@ -235,14 +259,10 @@ def post_chat(routine_id: str, body: ChatIn, u: dict = Member):
                    for h in con.execute("SELECT * FROM chat WHERE routine_id=? ORDER BY id", (routine_id,))]
         ch = charts(con)
     try:
-        out = ai.routine_chat(r, ch, history, who=u["id"])
+        out = ai.routine_chat(r, ch, history, who=u["id"], draft=body.draft)
     except ai.Unavailable as e:
         raise HTTPException(503, str(e))
-    proposal = out.get("proposal")
-    for it in (proposal or {}).get("items", []):
-        if it["kind"] == "figure":
-            f = syllabus.by_name(r["dance"], it["figure"])
-            it["fig"] = f["id"] if f else None
+    proposal = match_proposal(r, out.get("proposal"))
     with db.tx() as con:
         con.execute("INSERT INTO chat (routine_id, role, content, proposal, at) VALUES (?,?,?,?,?)",
                     (routine_id, "assistant", out["reply"], json.dumps(proposal) if proposal else None, db.now()))
