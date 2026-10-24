@@ -4,6 +4,7 @@ import logging
 
 import anthropic
 
+import db
 import syllabus
 from config import settings
 
@@ -26,7 +27,20 @@ def _get_client() -> anthropic.Anthropic:
     return _client
 
 
-def _call(system: str, messages: list, schema: dict, max_tokens: int = 16000, effort: str = "medium") -> dict:
+def _log_usage(who: int | None, purpose: str, msg):
+    """Record tokens and estimated cost per call, so opening Claude to everyone can be priced and capped."""
+    try:
+        i, o = msg.usage.input_tokens or 0, msg.usage.output_tokens or 0
+        cost = i * settings.ai_price_in / 1e6 + o * settings.ai_price_out / 1e6
+        with db.tx() as con:
+            con.execute("INSERT INTO ai_usage (user_id, purpose, model, input_tokens, output_tokens, cost_usd, at)"
+                        " VALUES (?,?,?,?,?,?,?)", (who, purpose, msg.model, i, o, cost, db.now()))
+    except Exception:  # usage logging must never break the feature
+        log.exception("couldn't log Claude usage")
+
+
+def _call(system: str, messages: list, schema: dict, max_tokens: int = 16000, effort: str = "medium",
+          who: int | None = None, purpose: str = "") -> dict:
     client = _get_client()
     try:
         msg = client.beta.messages.create(
@@ -44,6 +58,7 @@ def _call(system: str, messages: list, schema: dict, max_tokens: int = 16000, ef
         raise Unavailable(f"Claude API error {e.status_code}") from e
     except anthropic.APIConnectionError as e:
         raise Unavailable("Couldn't reach Claude") from e
+    _log_usage(who, purpose, msg)
     if msg.stop_reason == "refusal":
         raise Unavailable("Claude declined this request")
     if msg.stop_reason == "max_tokens":
@@ -102,13 +117,14 @@ The app draws footprints from each step's foot (f), direction (d) and turn (t), 
 t is the amount turned between the previous step and this one (⅛ = 45, ¼ = 90, ⅜ = 135, ½ = 180), positive to the right. For a pivot on step n, put the turn on step n+1. Use d = "tap" for a step taken without weight. Write fw with the book's abbreviations (HT, TH, T, H, BF, "IE of B, H", WF), not words. Leave rf, sw and mv empty for Latin."""
 
 
-def draft_chart(dance: dict, fig: dict, existing: dict | None) -> dict:
+def draft_chart(dance: dict, fig: dict, existing: dict | None, who: int | None = None) -> dict:
     prompt = f"Write the chart for the {dance['name']} figure \"{fig['name']}\" ({fig['level']}), for both Man and Lady."
     if existing:
         clean = {k: existing.get(k) for k in ("start", "timing", "man", "lady")}
         prompt += ("\n\nThis is the chart we have now. Check it against the book and correct anything wrong:\n"
                    + json.dumps(clean, ensure_ascii=False))
-    out = _call(CHART_SYSTEM, [{"role": "user", "content": prompt}], CHART_SCHEMA, effort="high")
+    out = _call(CHART_SYSTEM, [{"role": "user", "content": prompt}], CHART_SCHEMA, effort="high",
+                who=who, purpose="chart:" + fig["id"])
     for side in ("man", "lady"):
         for s in out[side]:
             if not s.get("mv"):
@@ -143,7 +159,7 @@ CHAT_SCHEMA = {
 
 CHAT_SYSTEM = """You are an experienced ISTD ballroom and Latin teacher helping a couple plan a competition or medal routine. Use ISTD figure names and technique as in Alex Moore's Ballroom Dancing (Standard) or Walter Laird's Technique of Latin Dancing (Latin): precedes and follows, alignments, amount of turn, the line of dance and floor craft.
 
-Both partners share this conversation; messages are labelled with who wrote them. Answer plainly and briefly. Only include a proposal when you are suggesting concrete figures to add or a whole routine, and use figure names exactly as listed so the app can match them. Otherwise set proposal to null."""
+The routine's dancers share this conversation; messages are labelled with who wrote them. Answer plainly and briefly. Only include a proposal when you are suggesting concrete figures to add or a whole routine, and use figure names exactly as listed so the app can match them. Otherwise set proposal to null."""
 
 
 def routine_context(r: dict, charts: dict) -> str:
@@ -172,7 +188,7 @@ def routine_context(r: dict, charts: dict) -> str:
             + ("\n\nCharts on file:\n" + "\n".join(chart_lines) if chart_lines else ""))
 
 
-def routine_chat(r: dict, charts: dict, history: list[dict]) -> dict:
+def routine_chat(r: dict, charts: dict, history: list[dict], who: int | None = None) -> dict:
     """history: [{role, content, author}] oldest first, ending with the new user message."""
     msgs = []
     for h in history[-16:]:
@@ -184,4 +200,4 @@ def routine_chat(r: dict, charts: dict, history: list[dict]) -> dict:
     while msgs and msgs[0]["role"] != "user":
         msgs.pop(0)
     msgs[-1]["content"] = "<routine>\n" + routine_context(r, charts) + "\n</routine>\n\n" + msgs[-1]["content"]
-    return _call(CHAT_SYSTEM, msgs, CHAT_SCHEMA, effort="medium")
+    return _call(CHAT_SYSTEM, msgs, CHAT_SCHEMA, effort="medium", who=who, purpose="routine:" + r["id"])

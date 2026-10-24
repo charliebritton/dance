@@ -3,10 +3,10 @@ import { DIRS, DIR_LABELS, MV_OPTS, alignName, drawFrame, makePlayer } from "../
 import {
   BASE, $, $$, S, api, attempt, chartBeats, chartFor, confirmTap, danceOf, esc, figByName, figUsage, fmtBeats, fmtDate,
   hooks, layersFor, ls, refresh, roleWord, setAccent, slug, tempoMid, totalTurn, uploadVideo, userName, videoBlock,
-  count, footwork, glossed, head, sway, LEVEL_TIPS,
+  count, footwork, glossed, head, sway, LEVEL_TIPS, canUseAI, coveredIn, fmtDay, groupName, isAdmin, isCommittee, myGroupLessons,
 } from "../core.js";
 
-const v = { dance: ls.get("dance", "waltz"), fig: null, q: "", step: -1, editing: false, draft: null, ctx: null, drafting: false };
+const v = { dance: ls.get("dance", "waltz"), fig: null, q: "", step: -1, editing: false, draft: null, ctx: null, drafting: false, comments: {} };
 const player = makePlayer((i, frac) => { v.step = i; paint(i + frac); });
 export const stopSyllabus = () => player.pause();
 
@@ -45,12 +45,14 @@ function strip() {
 
 function figList() {
   const q = v.q.trim().toLowerCase(), usage = figUsage();
-  const vids = {};
+  const vids = {}, covered = new Set(myGroupLessons().flatMap((l) => l.figures));
   for (const x of S.videos) if (x.ref.startsWith("fig:")) vids[x.ref.slice(4)] = (vids[x.ref.slice(4)] || 0) + 1;
   const row = (f) => {
     const c = chartFor(f.id);
     return `<a class="frow" href="${BASE}/syllabus/${f.dance}/${f.slug}" data-link aria-current="${f.id === v.fig}">
+      <span class="tick" title="${covered.has(f.id) ? "Covered in your group's lessons" : ""}">${covered.has(f.id) ? "✓" : ""}</span>
       <span class="nm">${esc(f.name)}${q ? ` <span class="dn">${esc(danceOf(f.dance).name)}</span>` : ""}</span>
+      ${S.verified[f.id] ? `<span class="ic ok" title="Chart checked against the technique book">Checked</span>` : ""}
       ${c ? `<span class="ic" title="${c.src === "ai" ? "Chart drafted by Claude" : "Has a step chart"}">${c.src === "ai" ? "AI" : "Chart"}</span>` : ""}
       ${vids[f.id] ? `<span class="ic" title="Demo videos">▶ ${vids[f.id]}</span>` : ""}
       ${usage[f.id] ? `<span class="ic" title="In your routines">In ${usage[f.id].size}</span>` : ""}</a>`;
@@ -79,9 +81,10 @@ function pfChips(danceId, list) {
 function detail() {
   const f = S.figs.get(v.fig), d = danceOf(f.dance), c = chartFor(f.id), latin = d.style === "Latin";
   const usage = [...(figUsage()[f.id] || [])];
-  const mine = S.routines.filter((r) => r.dance === f.dance);
-  const note = S.notes[f.id];
+  const mine = S.routines.filter((r) => r.dance === f.dance && !r.example);
   const bars = c ? chartBeats(c) / d.bpb : 0;
+  const ver = S.verified[f.id], lessonsIn = coveredIn(f.id);
+  const requested = S.requests.some((r) => r.kind === "chart" && r.target === f.id && r.status === "open");
   return `
   <header class="fig-head">
     <div class="min0">
@@ -90,11 +93,15 @@ function detail() {
       <div class="chips">
         <span class="chip"><span class="medal m-${f.level}"></span><abbr class="tip" data-tip="${esc(LEVEL_TIPS[f.level])}">${f.level}</abbr></span>
         <span class="chip mono">${d.sig} · ${d.tempo[0]}–${d.tempo[1]} bars/min</span>
-        ${c ? `<span class="chip mono">Timing ${esc(c.timing || "")}</span><span class="chip mono">${bars % 1 ? bars.toFixed(1) : bars} bar${bars === 1 ? "" : "s"}</span>${srcBadge(c)}` : ""}
+        ${c ? `<span class="chip mono">Timing ${esc(c.timing || "")}</span><span class="chip mono">${bars % 1 ? bars.toFixed(1) : bars} bar${bars === 1 ? "" : "s"}</span>${ver ? `<span class="badge ed" title="Checked against the technique book${ver.by ? " by " + esc(userName(ver.by)) : ""}">✓ Checked${ver.by ? " by " + esc(userName(ver.by)) : ""}</span>` : srcBadge(c)}` : ""}
       </div>
+      ${lessonsIn.length ? `<div class="pf covered">${lessonsIn.slice(0, 4).map((l) => `<a class="pfc" href="${BASE}/lessons/${l.id}" data-link>Covered with ${esc(groupName(l.group_id))} · ${esc(fmtDay(l.date, { weekday: undefined }))}</a>`).join("")}</div>` : ""}
     </div>
-    ${mine.length ? `<select class="input auto" id="addToR" aria-label="Add to a routine"><option value="">Add to a routine…</option>${mine.map((r) => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>`
+    <div class="row">
+      ${c && isCommittee() ? `<button class="btn sm" data-act="${ver ? "unverify" : "verify"}">${ver ? "Mark as unchecked" : "✓ Mark as checked"}</button>` : ""}
+      ${!S.me ? "" : mine.length ? `<select class="input auto" id="addToR" aria-label="Add to a routine"><option value="">Add to a routine…</option>${mine.map((r) => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>`
       : `<button class="btn" data-act="new-routine-with">Start a routine with this</button>`}
+    </div>
   </header>
   ${c ? `
   <div class="stage-grid">
@@ -123,29 +130,47 @@ function detail() {
   </div>
   <div class="sec-title"><span>Step chart · ${esc(S.role === "both" ? "Leader and Follower" : roleWord(S.role))}</span>
     <span class="acts">${v.editing ? `<button class="btn sm solid" data-act="save-chart">Save steps</button><button class="btn sm" data-act="cancel-edit">Cancel</button>`
-      : `<button class="btn sm" data-act="edit-chart">Edit steps</button>${S.me?.ai ? `<button class="btn sm ghost" data-act="ai-chart" ${v.drafting ? "disabled" : ""}>${v.drafting ? "Claude is checking…" : c.src === "starter" ? "Ask Claude to check it" : "Redraft with Claude"}</button>` : ""}${S.charts[f.id] && S.starter[f.id] ? `<button class="btn sm ghost" data-act="reset-chart">Back to starter chart</button>` : ""}`}</span></div>
+      : `${isCommittee() ? `<button class="btn sm" data-act="edit-chart">Edit steps</button>` : ""}${canUseAI() ? `<button class="btn sm ghost" data-act="ai-chart" ${v.drafting ? "disabled" : ""}>${v.drafting ? "Claude is checking…" : c.src === "starter" ? "Ask Claude to check it" : "Redraft with Claude"}</button>` : ""}${isCommittee() && S.charts[f.id] && S.starter[f.id] ? `<button class="btn sm ghost" data-act="reset-chart">Back to starter chart</button>` : ""}`}</span></div>
   <div id="chartTables">${v.editing ? editTables(latin) : tables(f, c, d)}</div>
   <p class="abbr small muted">${latin ? "BF ball flat · B ball · IE inside edge · F flat. “&” and “a” are split beats." : "H heel · T toe · B ball · WF whole foot · IE inside edge · NFR no foot rise · e/o end of · DW/DC diagonal to wall/centre · LOD line of dance · PP promenade position · CBM(P) contrary body movement (position)."}</p>`
   : `
   <div class="panel pad nochart">
     <h2 class="h3">No step chart yet</h2>
-    ${S.me?.readonly ? `<p>This figure hasn't been charted yet. The figures marked “Chart” in the list have full step charts and footprints.</p>` : ""}
-    <p class="rw-only">Claude can draft one in the style of Alex Moore's and Walter Laird's technique books, with the footprints worked out from it. Correct any step afterwards. Your partner sees the same chart.</p>
-    <div class="row">${S.me?.ai ? `<button class="btn acc" data-act="ai-chart" ${v.drafting ? "disabled" : ""}>${v.drafting ? "Claude is writing it…" : "Draft the steps with Claude"}</button>` : `<span class="muted small">Add a Claude API key to the server to draft charts.</span>`}
-    <button class="btn" data-act="blank-chart">Write the steps myself</button></div>
+    <p>This figure hasn't been charted yet. The figures marked “Chart” in the list have full step charts and footprints.</p>
+    <div class="row">
+      ${canUseAI() ? `<button class="btn acc" data-act="ai-chart" ${v.drafting ? "disabled" : ""}>${v.drafting ? "Claude is writing it…" : "Draft the steps with Claude"}</button>` : ""}
+      ${S.me && !canUseAI() ? (requested ? `<span class="badge st">Chart requested</span>` : `<button class="btn acc" data-act="request-chart">Request a chart</button>`) : ""}
+      ${isCommittee() ? `<button class="btn" data-act="blank-chart">Write the steps myself</button>` : ""}
+      ${!S.me ? `<a class="btn" href="${BASE}/login" data-link>Members: sign in to request one</a>` : ""}
+    </div>
     ${v.drafting ? `<p class="small muted">This usually takes under a minute.</p>` : ""}
   </div>`}
-  <div class="two">
+  ${S.me ? `<div class="two">
     <section>
-      <div class="sec-title"><span>Our notes</span></div>
-      <textarea class="input notes" id="figNote" placeholder="What your teacher said, the bits you keep getting wrong, counts…">${esc(note?.text || "")}</textarea>
-      <div class="saved" id="noteSaved">${note ? `Last edited by ${esc(userName(note.updated_by))} · ${fmtDate(note.updated_at)}` : ""}</div>
+      <div class="sec-title"><span>Comments</span><span class="small muted">seen by members</span></div>
+      ${commentsBlock(f.id)}
     </section>
     <section>
+      <div class="sec-title"><span>My notes</span><span class="small muted">only you see these</span></div>
+      <textarea class="input notes" id="figNote" placeholder="What your teacher said, the bits you keep getting wrong, counts…">${esc(S.notes[f.id] || "")}</textarea>
+      <div class="saved" id="noteSaved"></div>
       <div class="sec-title"><span>Demo videos</span></div>
-      ${videoBlock("fig:" + f.id)}
+      ${videoBlock("fig:" + f.id, isCommittee())}
     </section>
-  </div>`;
+  </div>` : `<div class="panel pad memberhint"><b>Society members</b> also get demo videos, comments, private notes and which lessons covered this figure. <a href="${BASE}/login" data-link>Sign in</a></div>`}`;
+}
+
+function commentsBlock(figId) {
+  const list = v.comments[figId];
+  if (!list) { loadComments(figId); return `<p class="small muted">Loading…</p>`; }
+  return `<div class="comments">${list.map((c) => `<div class="comment"><div class="small"><b>${esc(userName(c.user_id))}</b> <span class="muted">${fmtDate(c.created_at)}</span>
+    ${c.user_id === S.me.id || isCommittee() ? `<button class="linkish small" data-cdel="${c.id}">Remove</button>` : ""}</div><p class="prewrap">${glossed(c.text)}</p></div>`).join("") || `<p class="small muted">No comments yet.</p>`}
+    <form id="figComment" class="stack"><textarea class="input" name="text" required placeholder="A tip, a correction, a question for the teacher"></textarea><button class="btn" type="submit">Post comment</button></form></div>`;
+}
+
+async function loadComments(figId) {
+  const r = await attempt(() => api("GET", `/api/figures/${figId}/comments`));
+  if (r) { v.comments[figId] = r; if (v.fig === figId && !v.editing) hooks.render(); }
 }
 
 function tables(f, c, d) {
@@ -240,6 +265,12 @@ function callout(k) {
 async function onClick(ev) {
   const tr = ev.target.closest("tr[data-step]");
   if (tr && !v.editing) { player.pause(); v.step = +tr.dataset.step; paint(v.step + 0.999); return; }
+  const cdel = ev.target.closest("[data-cdel]");
+  if (cdel) {
+    if (!confirmTap(cdel, "Remove?")) return;
+    if (await attempt(() => api("DELETE", `/api/figure-comments/${cdel.dataset.cdel}`))) { delete v.comments[v.fig]; await refresh(); hooks.render(); }
+    return;
+  }
   const t = ev.target.closest("[data-act]"); if (!t) return;
   const f = S.figs.get(v.fig), n = v.ctx?.steps.length || 0;
   switch (t.dataset.act) {
@@ -265,7 +296,7 @@ async function onClick(ev) {
     case "row-add": { const arr = v.draft[t.dataset.role], last = arr.at(-1); arr.push({ f: last?.f === "L" ? "R" : "L", p: "", d: "fwd", t: 0, tt: "", fw: "", rf: "", cbm: false, sw: "", c: last?.c || "1", b: last?.b || 1 }); hooks.render(); break; }
     case "row-del": { const row = t.closest("tr"); v.draft[row.dataset.role].splice(+row.dataset.i, 1); hooks.render(); break; }
     case "save-chart":
-      if (await attempt(() => api("PUT", `/api/charts/${f.id}`, v.draft), "Steps saved for both of you")) { v.editing = false; v.draft = null; v.step = -1; await refresh(); hooks.render(); }
+      if (await attempt(() => api("PUT", `/api/charts/${f.id}`, v.draft), "Steps saved. Mark the chart as checked once it matches the book")) { v.editing = false; v.draft = null; v.step = -1; await refresh(); hooks.render(); }
       break;
     case "reset-chart":
       if (!confirmTap(t, "Discard your edits?")) break;
@@ -280,8 +311,14 @@ async function onClick(ev) {
       if (r) { await refresh(); history.pushState(null, "", BASE + "/routines/" + r.id); hooks.route(); }
       break;
     }
+    case "verify": case "unverify":
+      if (await attempt(() => api(t.dataset.act === "verify" ? "POST" : "DELETE", `/api/figures/${f.id}/verified`), t.dataset.act === "verify" ? "Marked as checked" : "Marked as unchecked")) { await refresh(); hooks.render(); }
+      break;
+    case "request-chart":
+      if (await attempt(() => api("POST", "/api/requests", { kind: "chart", target: f.id }), "Requested. You'll see the chart here once it's drafted")) { await refresh(); hooks.render(); }
+      break;
     case "vid-del":
-      if (!confirmTap(t, "Remove for both?")) break;
+      if (!confirmTap(t, "Remove for everyone?")) break;
       await attempt(() => api("DELETE", "/api/videos/" + t.dataset.id), "Video removed"); await refresh(); hooks.render(); break;
   }
 }
@@ -309,7 +346,7 @@ function onInput(ev) {
 async function onChange(ev) {
   const t = ev.target, f = S.figs.get(v.fig);
   if (t.id === "figNote") {
-    if (await attempt(() => api("PUT", `/api/notes/${f.id}`, { text: t.value }))) { $("#noteSaved").textContent = "Saved for both of you"; refresh(); }
+    if (await attempt(() => api("PUT", `/api/notes/${f.id}`, { text: t.value }))) { $("#noteSaved").textContent = "Saved, just for you"; S.notes[f.id] = t.value; }
   } else if (t.id === "addToR" && t.value) {
     const r = S.routines.find((x) => x.id === t.value);
     if (await attempt(() => api("PATCH", `/api/routines/${r.id}`, { base_rev: r.rev, items: [...r.items, { type: "fig", fig: f.id }] }), `Added to ${r.name}`)) { await refresh(); hooks.render(); }
@@ -323,6 +360,11 @@ async function onChange(ev) {
 async function onSubmit(ev) {
   ev.preventDefault();
   const fm = ev.target;
+  if (fm.id === "figComment") {
+    const r = await attempt(() => api("POST", `/api/figures/${v.fig}/comments`, { text: fm.text.value }));
+    if (r) { v.comments[v.fig] = r; await refresh(); hooks.render(); }
+    return;
+  }
   if (fm.dataset.vidform) {
     const fd = new FormData(fm); fd.append("ref", fm.dataset.vidform);
     if (await attempt(() => api("POST", "/api/videos", fd), "Video link added")) { await refresh(); hooks.render(); }
@@ -336,4 +378,5 @@ function uploadVideoFrom(input) {
 
 /** Keep the stage animating across the poll-driven re-renders. */
 export function isBusy() { return player.playing || v.editing || v.drafting; }
+export const forgetComments = () => { v.comments = {}; };
 export function reRole() { v.lastCallout = null; if (v.ctx) { const was = player.playing; setupStage(); if (was) player.play(Math.max(0, v.step)); } }

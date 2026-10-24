@@ -14,10 +14,18 @@ export const ls = {
 };
 
 export const S = {
-  me: null, users: [], routines: [], charts: {}, notes: {}, videos: [],
+  me: null, groups: [], users: [], routines: [], charts: {}, verified: {}, notes: {}, comment_counts: {}, videos: [],
+  lessons: [], competitions: [], requests: [],
   levels: [], dances: [], starter: {}, figs: new Map(),
-  role: ls.get("role", "man"),
+  role: ls.get("role", null),
 };
+// who may do what (the server checks every write too)
+export const isMember = () => !!S.me;
+export const isCommittee = () => ["committee", "admin"].includes(S.me?.role);
+export const isAdmin = () => S.me?.role === "admin";
+export const canUseAI = () => !!S.me?.ai;
+/** The "Steps for" switch: your own choice, else your Lead/Follow preference. */
+export const roleDefault = () => ({ lead: "man", follow: "lady" })[S.me?.dance_role] || "man";
 export const hooks = { render: () => {} };
 
 // ── API ───────────────────────────────────────────────────────────────
@@ -45,10 +53,23 @@ export async function loadSyllabus() {
   }
 }
 
+export async function loadMe() {
+  const r = await api("GET", "/api/me");
+  S.me = r.me; S.groups = r.groups;
+  if (!S.role) S.role = roleDefault();
+}
+
+const EMPTY = { users: [], routines: [], notes: {}, comment_counts: {}, videos: [], lessons: [], competitions: [], requests: [] };
 export async function refresh() {
   const st = await api("GET", "/api/state");
-  Object.assign(S, { users: st.users, routines: st.routines, charts: st.charts, notes: st.notes, videos: st.videos });
+  Object.assign(S, EMPTY, st);
+  if (st.groups) S.groups = st.groups;
 }
+
+export const groupName = (id) => S.groups.find((g) => g.id === id)?.name || "All groups";
+/** Lessons in which a figure was covered, newest first (members only). */
+export const coveredIn = (figId) => S.lessons.filter((l) => l.figures.includes(figId));
+export const myGroupLessons = () => S.lessons.filter((l) => !l.group_id || !S.me?.groups.length || S.me.groups.includes(l.group_id));
 
 // ── syllabus helpers ──────────────────────────────────────────────────
 export const DARK_ON = new Set(["scarlet", "blue"]);
@@ -66,6 +87,14 @@ export const roleWord = (r) => (r === "lady" ? "Follower" : "Leader");
 export const tempoMid = (d) => (d.tempo[0] + d.tempo[1]) / 2;
 export const fmtBeats = (b) => ({ 0.25: "¼", 0.5: "½", 0.75: "¾", 1: "1", 1.5: "1½", 2: "2" })[+b] || String(b);
 export function fmtDate(t) { try { return new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short" }); } catch { return ""; } }
+/** "2026-11-02" → "Mon 2 Nov" (with the year when it isn't this year). */
+export function fmtDay(iso, opts = {}) {
+  if (!iso) return "Date TBC";
+  const d = new Date(iso + "T12:00:00");
+  const o = { weekday: "short", day: "numeric", month: "short", ...(d.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}), ...opts };
+  try { return d.toLocaleDateString("en-GB", o); } catch { return iso; }
+}
+export const today = () => new Date().toISOString().slice(0, 10);
 export function turnFrac(deg) {
   const m = { 45: "⅛", 90: "¼", 135: "⅜", 180: "½", 225: "⅝", 270: "¾", 315: "⅞", 360: "1" };
   return (m[Math.abs(deg)] || Math.abs(deg) + "°") + (deg > 0 ? " R" : deg < 0 ? " L" : "");
@@ -111,7 +140,7 @@ export async function attempt(fn, okMsg) {
   catch (e) {
     toast(e.message || "Something went wrong");
     if (e.status === 409) { await refresh(); hooks.render(); }
-    if (e.status === 401) location.href = BASE + "/login";
+    if (e.status === 401) { history.pushState(null, "", BASE + "/login"); hooks.route(); }
     return null;
   }
 }
@@ -124,15 +153,18 @@ export function confirmTap(btn, label) {
   return false;
 }
 
-export function videoBlock(ref) {
+/** Videos for a figure / lesson / routine. canAdd: whether this person may add to it (the server checks too). */
+export function videoBlock(ref, canAdd = true) {
+  if (!S.me) return `<p class="muted small">Videos are for society members. <a href="${BASE}/login" data-link>Sign in</a> to watch them.</p>`;
   const vids = S.videos.filter((v) => v.ref === ref);
   const list = vids.map((v) => {
     const by = `<span class="muted small">${esc(userName(v.created_by))}</span>`;
-    const del = `<button class="btn sm ghost" data-act="vid-del" data-id="${v.id}">Remove</button>`;
+    const del = v.created_by === S.me.id || isCommittee() ? `<button class="btn sm ghost" data-act="vid-del" data-id="${v.id}">Remove</button>` : "";
     if (v.file) return `<div class="vid"><video controls preload="metadata" playsinline src="${BASE}/media/${encodeURIComponent(v.file)}"></video><div class="row"><span class="t">${esc(v.title || "Uploaded video")}</span>${by}${del}</div></div>`;
     let host = ""; try { host = new URL(v.url).hostname.replace(/^www\./, ""); } catch {}
     return `<div class="vid"><div class="row"><a class="link t" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer"><span class="play" aria-hidden="true">▶</span><span><b>${esc(v.title || host || "Video link")}</b><br><span class="muted small">${esc(host)} · opens in a new tab</span></span></a>${by}${del}</div></div>`;
   }).join("");
+  if (!canAdd) return `<div class="vids">${list || `<p class="muted small">No videos yet.</p>`}</div>`;
   return `<div class="vids">${list || `<p class="muted small">No videos yet. Paste a YouTube or Instagram link, or upload a clip from your phone.</p>`}
     <form class="addrow" data-vidform="${esc(ref)}"><input class="input" name="url" type="url" placeholder="https://youtube.com/…" aria-label="Video link" required><input class="input" name="title" placeholder="Title (optional)" aria-label="Video title"><button class="btn" type="submit">Add link</button></form>
     <label class="btn upload">Upload a clip<input type="file" accept="video/*" data-upload="${esc(ref)}" hidden></label>

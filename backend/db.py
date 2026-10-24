@@ -8,6 +8,19 @@ from config import settings
 
 SCHEMA = Path(__file__).with_name("schema.sql")
 
+# Columns added after a table first shipped. schema.sql only creates missing tables, so existing databases
+# get these with ALTER TABLE on start-up. Never remove an entry; add new ones at the end.
+ADDED_COLUMNS = [
+    ("users", "role", "TEXT NOT NULL DEFAULT 'member'"),        # member | committee | admin
+    ("users", "dance_role", "TEXT NOT NULL DEFAULT 'both'"),    # lead | follow | both
+    ("users", "handle", "TEXT"),                                 # WebAuthn user handle, base64url
+    ("routines", "owner_id", "INTEGER"),
+    ("routines", "lead_id", "INTEGER"),
+    ("routines", "follow_id", "INTEGER"),
+]
+
+DEFAULT_GROUPS = ["Beginner", "Novice", "Intermediate", "Advanced", "Team"]
+
 
 def now() -> int:
     return int(time.time() * 1000)
@@ -35,6 +48,18 @@ def tx():
 def init():
     with tx() as con:
         con.executescript(SCHEMA.read_text())
+        for table, col, decl in ADDED_COLUMNS:
+            have = {r["name"] for r in con.execute(f"PRAGMA table_info({table})")}
+            if col not in have:
+                con.execute(f"ALTER TABLE {table} ADD COLUMN {col} {decl}")
+        if not con.execute("SELECT 1 FROM groups LIMIT 1").fetchone():
+            con.executemany("INSERT INTO groups (name, sort) VALUES (?,?)", [(g, i) for i, g in enumerate(DEFAULT_GROUPS)])
+        # the old single shared note per figure becomes the first comment on it
+        if con.execute("SELECT 1 FROM notes LIMIT 1").fetchone() and not con.execute("SELECT 1 FROM figure_comments LIMIT 1").fetchone():
+            con.execute("INSERT INTO figure_comments (fig_id, user_id, text, created_at)"
+                        " SELECT fig_id, updated_by, text, updated_at FROM notes WHERE trim(text) <> ''")
+        # routines made before accounts belonged to whoever created them
+        con.execute("UPDATE routines SET owner_id = created_by WHERE owner_id IS NULL AND created_by IS NOT NULL")
         if not con.execute("SELECT 1 FROM routines LIMIT 1").fetchone():
             seed_example(con)
 
@@ -64,7 +89,7 @@ def seed_example(con):
         "INSERT INTO routines (id,name,dance,level,brief,items,rev,example,created_at,updated_at)"
         " VALUES (?,?,?,?,?,?,1,1,?,?)",
         ("example-bronze-waltz", "Example: Bronze Waltz", "waltz", "Bronze",
-         "Example routine. Long side, corner, then the start of the short side. Delete it once you've made your own.",
+         "Example routine. Long side, corner, then the start of the short side.",
          json.dumps(items), t, t))
     con.execute("INSERT INTO routine_versions VALUES (?,?,?,?,?,?)",
                 ("example-bronze-waltz", 1, json.dumps(items), "Bronze", None, t))

@@ -2,6 +2,14 @@
 import { drawFrame, makePlayer } from "../engine.js";
 import { BASE, $, $$, S, chartFor, danceOf, esc, hooks, layersFor, ls, roleWord, setAccent, sliceChart, stepRange, tempoMid } from "../core.js";
 import { drawFloor, planRoutine, roomFor, roomSelect, routineSegs } from "../floor.js";
+import { myPart } from "./routines.js";
+
+/** A lesson's routine, shaped like a routine so the player can run it. */
+function lessonRoutine(id) {
+  const l = S.lessons.find((x) => x.id === id);
+  if (!l || !l.dance) return null;
+  return { id: "lesson:" + l.id, name: (l.title || danceOf(l.dance).name + " lesson") + " (lesson)", dance: l.dance, items: l.items, rev: l.updated_at, lesson: true };
+}
 
 const v = { id: null, sig: "", segs: [], ev: [], d: null, cur: 0, frac: 0.999 };
 const player = makePlayer((i, frac) => {
@@ -29,11 +37,16 @@ function build(r) {
 
 export function render(el, params) {
   const speed = +ls.get("pspeed", 1), metro = ls.get("metro", true), loop = (v.loop = ls.get("ploop", false));
+  const fromLesson = params.lesson ? lessonRoutine(params.lesson) : null;
   if (params.id) v.id = params.id;
-  if (!S.routines.find((r) => r.id === v.id)) v.id = ls.get("rid", null);
-  const r = S.routines.find((x) => x.id === v.id) || S.routines[0];
+  if (fromLesson) v.id = fromLesson.id;
+  const list = fromLesson ? [fromLesson, ...S.routines] : S.routines;
+  if (!list.find((r) => r.id === v.id)) v.id = ls.get("rid", null);
+  const r = list.find((x) => x.id === v.id) || list[0];
+  // open on your own part of the routine
+  if (r && r.id !== v.lastOpened) { v.lastOpened = r.id; const part = !r.lesson && myPart(r); if (part && S.role !== "both") S.role = part; hooks.headerOnly?.(); }
   el.innerHTML = `<div class="pbar">
-      <label class="field">Routine<select class="input" id="pRoutine">${S.routines.map((x) => `<option value="${x.id}" ${x.id === r?.id ? "selected" : ""}>${esc(x.name)}</option>`).join("") || `<option>No routines yet</option>`}</select></label>
+      <label class="field">Routine<select class="input" id="pRoutine">${list.map((x) => `<option value="${x.id}" ${x.id === r?.id ? "selected" : ""}>${esc(x.name)}</option>`).join("") || `<option>No routines yet</option>`}</select></label>
       <label class="field">Speed<select class="input" id="pSpeed">${[[0.5, "50% · learning"], [0.75, "75%"], [0.9, "90%"], [1, "100% · competition tempo"]].map(([x, l]) => `<option value="${x}" ${x === speed ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       <label class="check"><input type="checkbox" id="pMetro" ${metro ? "checked" : ""}> Metronome</label>
       <label class="check"><input type="checkbox" id="pLoop" ${loop ? "checked" : ""}> Loop the current figure</label>
@@ -117,7 +130,7 @@ function onClick(ev) {
 
 function onChange(ev) {
   const t = ev.target;
-  if (t.id === "pRoutine") { player.pause(); history.pushState(null, "", BASE + "/practice/" + t.value); hooks.route(); }
+  if (t.id === "pRoutine") { player.pause(); history.pushState(null, "", BASE + (t.value.startsWith("lesson:") ? "/practice/lesson/" + t.value.slice(7) : "/practice/" + t.value)); hooks.route(); }
   else if (t.id === "pSpeed") { ls.set("pspeed", +t.value); player.set({ bpm: tempoMid(v.d) * v.d.bpb * +t.value }); }
   else if (t.id === "pMetro") { ls.set("metro", t.checked); player.set({ metro: t.checked }); }
   else if (t.dataset.room !== undefined) { ls.set("room", t.value); v.sig = ""; hooks.render(); }

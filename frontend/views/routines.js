@@ -1,7 +1,7 @@
 // Routines: list, editor (figures, floor markers, bars), partner sign-off with "what changed", and the Claude planner.
 import {
   BASE, $, S, api, attempt, chartBeats, chartFor, confirmTap, sliceChart, stepRange, danceOf, esc, fmtDate, hooks, ls, refresh, setAccent, slug,
-  tempoMid, toast, uploadVideo, userName, videoBlock,
+  tempoMid, toast, uploadVideo, userName, videoBlock, canUseAI, isAdmin,
 } from "../core.js";
 import { drawFloor, planRoutine, roomFor, roomSelect, routineSegs } from "../floor.js";
 
@@ -25,6 +25,13 @@ function bars(r) {
   return { total, unknown };
 }
 export const signedOff = (r) => Object.entries(r.approvals || {}).filter(([, rev]) => rev === r.rev).map(([u]) => +u);
+const dancersOf = (r) => [r.lead_id, r.follow_id].filter(Boolean);
+export const canEdit = (r) => (r.example ? isAdmin() : [r.owner_id, r.lead_id, r.follow_id].includes(S.me.id) || isAdmin());
+/** Which part I dance in this routine, for the practice view: "man" (lead) or "lady" (follow). */
+export const myPart = (r) => (r.follow_id === S.me?.id && r.lead_id !== S.me?.id ? "lady" : r.lead_id === S.me?.id ? "man" : null);
+const partnerOf = (r) => (r.lead_id === S.me.id ? r.follow_id : r.follow_id === S.me.id ? r.lead_id : null);
+const memberOptions = (sel) => `<option value="">No partner yet</option>${S.users.filter((u) => u.id !== S.me.id).map((u) =>
+  `<option value="${u.id}" ${u.id === sel ? "selected" : ""}>${esc(u.name)}${u.dance_role !== "both" ? ` (${u.dance_role}s)` : ""}</option>`).join("")}`;
 
 export function render(el, params) {
   if (params.id) { v.id = params.id; ls.set("rid", v.id); }
@@ -40,10 +47,12 @@ export function render(el, params) {
         <input class="input" name="name" placeholder="e.g. Bronze Waltz for the medal test" required aria-label="Routine name">
         <div class="row nowrap"><select class="input" name="dance" aria-label="Dance">${S.dances.map((d) => `<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select>
         <select class="input" name="level" aria-label="Highest level">${S.levels.map((L) => `<option>${L}</option>`).join("")}</select></div>
+        <label class="field">Partner<select class="input" name="partner_id">${memberOptions(null)}</select></label>
+        <fieldset class="choice compact"><legend>I dance</legend><label><input type="radio" name="my_role" value="lead" ${S.me.dance_role !== "follow" ? "checked" : ""}> Lead</label><label><input type="radio" name="my_role" value="follow" ${S.me.dance_role === "follow" ? "checked" : ""}> Follow</label></fieldset>
         <button class="btn solid" type="submit">Create routine</button>
       </form>
     </aside>
-    <article id="rEditor">${r ? editor(r) : `<div class="panel pad empty">Your routines appear here: the figures in order, how many bars they take, both partners' sign-off, and Claude to help you plan.</div>`}</article>
+    <article id="rEditor" class="${r && !canEdit(r) ? "viewonly" : ""}">${r ? editor(r) : `<div class="panel pad empty">Your routines appear here: the figures in order, how many bars they take, both partners' sign-off, and a floor plan.</div>`}</article>
   </div>`;
   el.onclick = onClick; el.onchange = onChange; el.onsubmit = onSubmit; el.onkeydown = onKey;
   if (r) { paintFloor(r); loadChat(r.id); loadDiff(r); }
@@ -66,13 +75,14 @@ function paintFloor(r) {
 }
 
 function cards() {
-  if (!S.routines.length) return `<p class="muted small">No routines yet. Create one below, then ask Claude to help fill it in.</p>`;
+  if (!S.routines.length) return `<p class="muted small">No routines yet. Create one below and pick your partner.</p>`;
   return S.routines.map((r) => {
-    const d = danceOf(r.dance), ok = signedOff(r).length, { total } = bars(r);
+    const d = danceOf(r.dance), ok = signedOff(r).length, { total } = bars(r), p = partnerOf(r), need = dancersOf(r).length;
     return `<a class="rcard" href="${BASE}/routines/${r.id}" data-link aria-current="${r.id === v.id}"><span class="sw c-${d.color}"></span>
       <span class="nm">${esc(r.name)}</span>
       <span class="small muted">${esc(d.name)} · ${esc(r.level)} · ${r.items.filter((i) => i.type === "fig").length} figures · ${Math.round(total)} bars</span>
-      <span class="agree ${ok >= 2 ? "yes" : "no"}">${ok >= 2 ? "✓ Agreed by both" : ok === 1 ? "◐ One sign-off so far" : "○ Not signed off"}</span></a>`;
+      ${r.example ? `<span class="small muted">Example for everyone</span>` : `<span class="small">${p ? `With ${esc(userName(p))}` : "No partner yet"} · you ${myPart(r) === "lady" ? "follow" : "lead"}</span>
+      <span class="agree ${need === 2 && ok >= 2 ? "yes" : "no"}">${need < 2 ? "Add a partner to sign off" : ok >= 2 ? "✓ Agreed by both" : ok === 1 ? "◐ One sign-off so far" : "○ Not signed off"}</span>`}</a>`;
   }).join("");
 }
 
@@ -102,8 +112,10 @@ function editor(r) {
   return `
   <section class="panel pad rhead">
     <div class="row between"><span class="eyebrow">${esc(d.name)} · ISTD up to ${esc(r.level)}${r.example ? " · example" : ""}</span>
-      <span class="row"><a class="btn sm acc" href="${BASE}/practice/${r.id}" data-link>▶ Practise this routine</a><button class="btn sm ghost danger" data-act="r-del">Delete</button></span></div>
+      <span class="row"><a class="btn sm acc" href="${BASE}/practice/${r.id}" data-link>▶ Practise this routine</a>${r.owner_id === S.me.id || isAdmin() ? `<button class="btn sm ghost danger" data-act="r-del">Delete</button>` : ""}</span></div>
     <input class="title display" id="rName" value="${esc(r.name)}" aria-label="Routine name">
+    ${r.example ? "" : `<div class="row"><label class="row small muted">Partner <select class="input auto" id="rPartner">${memberOptions(partnerOf(r))}</select></label>
+      <label class="row small muted">I dance <select class="input auto" id="rMyRole"><option value="lead" ${myPart(r) !== "lady" ? "selected" : ""}>Lead</option><option value="follow" ${myPart(r) === "lady" ? "selected" : ""}>Follow</option></select></label></div>`}
     <div class="row"><label class="row small muted"><abbr class="tip" data-tip="Only figures up to this ISTD medal level are offered, and Claude keeps to them. Bronze is the foundation, Silver and Gold each add harder figures.">Highest level</abbr> <select class="input auto" id="rLevel">${S.levels.map((L) => `<option ${L === r.level ? "selected" : ""}>${L}</option>`).join("")}</select></label></div>
     <div class="tot">
       <div><b class="mono">${r.items.filter((i) => i.type === "fig").length}</b><span>figures</span></div>
@@ -113,8 +125,8 @@ function editor(r) {
     </div>
     <div class="signoff">
       <div class="who">${ok.length ? ok.map((id) => `<span class="person ok">✓ ${esc(userName(id))}</span>`).join("") : `<span class="muted small">Nobody has signed off version ${r.rev} yet.</span>`}
-        ${S.users.filter((u) => !ok.includes(u.id)).map((u) => `<span class="person">○ ${esc(userName(u.id))}</span>`).join("")}</div>
-      ${mine ? `<button class="btn sm" data-act="unapprove">Withdraw my sign-off</button>` : `<button class="btn sm solid" data-act="approve">I'm happy with version ${r.rev}</button>`}
+        ${dancersOf(r).filter((id) => !ok.includes(id)).map((id) => `<span class="person">○ ${esc(userName(id))}</span>`).join("")}</div>
+      ${!dancersOf(r).includes(S.me.id) ? "" : mine ? `<button class="btn sm" data-act="unapprove">Withdraw my sign-off</button>` : `<button class="btn sm solid" data-act="approve">I'm happy with version ${r.rev}</button>`}
     </div>
     ${!mine && myOld && diff ? `<div class="changes"><b>Since you signed off version ${myOld}</b>${diff}</div>` : ""}
     <p class="small muted">Last change by ${esc(userName(r.updated_by))} · ${fmtDate(r.updated_at)}. Changing the figures starts a new version, so you both sign off again.</p>
@@ -128,7 +140,7 @@ function editor(r) {
   <ul class="floor-notes small" id="floorNotes"></ul>
   ${assistant(r, d)}
   <div class="sec-title"><span>Practice recordings and demo videos</span></div>
-  ${videoBlock("routine:" + r.id)}`;
+  ${videoBlock("routine:" + r.id, canEdit(r))}`;
 }
 
 function assistant(r, d) {
@@ -138,13 +150,15 @@ function assistant(r, d) {
     : `<div class="msg cl">${esc(m.content)}</div>${m.proposal ? proposal(r, m) : ""}`).join("");
   return `<section class="ai" aria-label="Plan with Claude">
     <div class="row between"><h2 class="display h3">Plan it with Claude</h2>${log?.length ? `<button class="btn sm ghost onpop" data-act="clear-chat">Clear conversation</button>` : ""}</div>
-    <p>Claude sees this routine, your brief and the ISTD ${esc(d.name)} list up to ${esc(r.level)}. It checks precedes and follows, alignment and floor craft, and can propose figures you add in one click. You and your partner share this conversation.</p>
+    <p>Claude sees this routine, your brief and the ISTD ${esc(d.name)} list up to ${esc(r.level)}. It checks precedes and follows, alignment and floor craft, and proposes figures you can add in one click. You and your partner share this conversation.</p>
     <label class="field onpop">Brief for Claude<textarea class="input" id="rBrief" placeholder="e.g. Medal test, small hall about 10 × 14 m, start on the long side facing DW, my partner finds the Whisk hard">${esc(r.brief || "")}</textarea></label>
-    ${S.me.ai ? `
+    ${!canUseAI() ? `${log?.length ? `<div class="log" id="chatLog">${msgs}</div>` : ""}
+    <div class="row">${S.requests.some((q) => q.kind === "routine" && q.target === r.id && q.status === "open")
+      ? `<span class="badge st">Draft requested. Claude's suggestion will appear here</span>`
+      : `<button class="btn solid" data-act="request-draft">Request a draft from the site admin</button><span class="small">Write your brief above first. Claude is admin-only while costs are worked out.</span>`}</div>` : `
     <div class="quick">${QUICK.map((q) => `<button data-ask="${esc(q)}" ${v.sending ? "disabled" : ""}>${esc(q)}</button>`).join("")}</div>
     <div class="log" id="chatLog">${log ? msgs : `<p class="small">Loading the conversation…</p>`}${v.sending ? `<div class="msg me"><span class="by">You</span>${esc(v.pendingMsg)}</div><div class="msg cl thinking">Claude is thinking…</div>` : ""}</div>
-    <form class="composer" id="chatForm"><textarea class="input" id="chatIn" placeholder="Ask about this routine…" aria-label="Message to Claude" ${v.sending ? "disabled" : ""}></textarea><button class="btn solid" type="submit" ${v.sending ? "disabled" : ""}>Send</button></form>`
-    : `<p class="small">Add a Claude API key to the server to use the planner.</p>`}
+    <form class="composer" id="chatForm"><textarea class="input" id="chatIn" placeholder="Ask about this routine…" aria-label="Message to Claude" ${v.sending ? "disabled" : ""}></textarea><button class="btn solid" type="submit" ${v.sending ? "disabled" : ""}>Send</button></form>`}
   </section>`;
 }
 
@@ -156,7 +170,7 @@ function proposal(r, m) {
 }
 
 async function loadChat(id) {
-  if (v.chat[id] || !S.me.ai) return;
+  if (v.chat[id]) return;
   const log = await attempt(() => api("GET", `/api/routines/${id}/chat`));
   if (log) { v.chat[id] = log; if (v.id === id) rerenderEditor(); }
 }
@@ -240,6 +254,12 @@ async function onClick(ev) {
       if (!confirmTap(t, "Clear for both of you?")) break;
       if (await attempt(() => api("DELETE", `/api/routines/${r.id}/chat`))) { v.chat[r.id] = []; rerenderEditor(); }
       break;
+    case "request-draft": {
+      const brief = $("#rBrief")?.value || r.brief || "";
+      if (brief !== r.brief) await api("PATCH", `/api/routines/${r.id}`, { base_rev: r.rev, brief }).catch(() => {});
+      if (await attempt(() => api("POST", "/api/requests", { kind: "routine", target: r.id, note: brief }), "Requested. Claude's suggestion will appear on this page")) { await refresh(); hooks.render(); }
+      break;
+    }
     case "vid-del":
       if (!confirmTap(t, "Remove for both?")) break;
       await attempt(() => api("DELETE", "/api/videos/" + t.dataset.id), "Video removed"); await refresh(); hooks.render(); break;
@@ -249,6 +269,10 @@ async function onClick(ev) {
 function onChange(ev) {
   const t = ev.target, r = S.routines.find((x) => x.id === v.id); if (!r) return;
   if (t.dataset.room !== undefined) { ls.set("room", t.value); paintFloor(r); return; }
+  if (t.id === "rPartner" || t.id === "rMyRole") {
+    save(r, { partner_id: $("#rPartner").value ? +$("#rPartner").value : null, my_role: $("#rMyRole").value }, "Saved");
+    return;
+  }
   if (t.id === "rName") save(r, { name: t.value });
   else if (t.id === "rLevel") save(r, { level: t.value });
   else if (t.id === "rBrief") save(r, { brief: t.value });
@@ -265,7 +289,8 @@ async function onSubmit(ev) {
   const fm = ev.target, r = S.routines.find((x) => x.id === v.id);
   if (fm.id === "newRoutine") {
     const fd = new FormData(fm);
-    const res = await attempt(() => api("POST", "/api/routines", { name: fd.get("name"), dance: fd.get("dance"), level: fd.get("level") }));
+    const res = await attempt(() => api("POST", "/api/routines", { name: fd.get("name"), dance: fd.get("dance"), level: fd.get("level"),
+      partner_id: fd.get("partner_id") ? +fd.get("partner_id") : null, my_role: fd.get("my_role") || "lead" }));
     if (res) { await refresh(); history.pushState(null, "", BASE + "/routines/" + res.id); hooks.route(); }
   } else if (fm.id === "chatForm") {
     const text = $("#chatIn").value.trim(); if (text) ask(r, text);

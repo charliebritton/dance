@@ -81,3 +81,142 @@ CREATE TABLE IF NOT EXISTS chat (
   at          INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS chat_routine ON chat(routine_id, id);
+
+-- ── society accounts ───────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS groups (
+  id    INTEGER PRIMARY KEY,
+  name  TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  sort  INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS user_groups (
+  user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  group_id  INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, group_id)
+);
+
+-- id is the credential id, base64url
+CREATE TABLE IF NOT EXISTS passkeys (
+  id          TEXT PRIMARY KEY,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  public_key  BLOB NOT NULL,
+  sign_count  INTEGER NOT NULL DEFAULT 0,
+  transports  TEXT NOT NULL DEFAULT '[]',
+  label       TEXT NOT NULL DEFAULT '',
+  created_at  INTEGER NOT NULL,
+  last_used   INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS invites (
+  token       TEXT PRIMARY KEY,
+  label       TEXT NOT NULL DEFAULT '',
+  role        TEXT NOT NULL DEFAULT 'member',   -- role given to people who join with it
+  max_uses    INTEGER,                          -- NULL = unlimited
+  uses        INTEGER NOT NULL DEFAULT 0,
+  expires_at  INTEGER,                          -- NULL = never
+  revoked     INTEGER NOT NULL DEFAULT 0,
+  created_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at  INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS webauthn_challenges (
+  id          TEXT PRIMARY KEY,
+  challenge   BLOB NOT NULL,
+  purpose     TEXT NOT NULL,                    -- 'register' | 'login'
+  user_id     INTEGER,
+  data        TEXT NOT NULL DEFAULT '{}',       -- pending sign-up details
+  expires_at  INTEGER NOT NULL
+);
+
+-- ── figures ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS figure_status (
+  fig_id       TEXT PRIMARY KEY,
+  verified_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  verified_at  INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS figure_comments (
+  id          INTEGER PRIMARY KEY,
+  fig_id      TEXT NOT NULL,
+  user_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  text        TEXT NOT NULL,
+  created_at  INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS figure_comments_fig ON figure_comments(fig_id, id);
+
+CREATE TABLE IF NOT EXISTS user_notes (
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  fig_id      TEXT NOT NULL,
+  text        TEXT NOT NULL,
+  updated_at  INTEGER NOT NULL,
+  PRIMARY KEY (user_id, fig_id)
+);
+
+-- ── lessons ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS lessons (
+  id          TEXT PRIMARY KEY,
+  date        TEXT NOT NULL,                    -- YYYY-MM-DD
+  group_id    INTEGER REFERENCES groups(id) ON DELETE SET NULL,
+  dance       TEXT NOT NULL DEFAULT '',
+  title       TEXT NOT NULL DEFAULT '',
+  summary     TEXT NOT NULL DEFAULT '',
+  figures     TEXT NOT NULL DEFAULT '[]',       -- figure ids covered
+  items       TEXT NOT NULL DEFAULT '[]',       -- the routine danced, same shape as routines.items
+  created_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at  INTEGER NOT NULL,
+  updated_at  INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS lesson_comments (
+  id          INTEGER PRIMARY KEY,
+  lesson_id   TEXT NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+  user_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  text        TEXT NOT NULL,
+  created_at  INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS lesson_comments_lesson ON lesson_comments(lesson_id, id);
+
+-- ── competitions ───────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS competitions (
+  id              TEXT PRIMARY KEY,
+  name            TEXT NOT NULL,
+  host            TEXT NOT NULL DEFAULT '',
+  start_date      TEXT,                         -- YYYY-MM-DD
+  end_date        TEXT,
+  venue           TEXT NOT NULL DEFAULT '',
+  travel          TEXT NOT NULL DEFAULT 'tbc',  -- 'society' (travelling together) | 'own' | 'tbc'
+  team_entry      INTEGER NOT NULL DEFAULT 0,
+  entry_url       TEXT NOT NULL DEFAULT '',
+  entry_deadline  TEXT,
+  notes           TEXT NOT NULL DEFAULT '',
+  confirmed       INTEGER NOT NULL DEFAULT 0,
+  source          TEXT NOT NULL DEFAULT '',
+  updated_by      INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  updated_at      INTEGER NOT NULL
+);
+
+-- ── Claude ─────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS ai_requests (
+  id          INTEGER PRIMARY KEY,
+  user_id     INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  kind        TEXT NOT NULL,                    -- 'chart' | 'routine'
+  target      TEXT NOT NULL,                    -- figure id or routine id
+  note        TEXT NOT NULL DEFAULT '',
+  status      TEXT NOT NULL DEFAULT 'open',     -- 'open' | 'done' | 'dismissed' | 'failed'
+  created_at  INTEGER NOT NULL,
+  handled_at  INTEGER,
+  handled_by  INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS ai_usage (
+  id             INTEGER PRIMARY KEY,
+  user_id        INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  purpose        TEXT NOT NULL,
+  model          TEXT NOT NULL,
+  input_tokens   INTEGER NOT NULL,
+  output_tokens  INTEGER NOT NULL,
+  cost_usd       REAL NOT NULL,
+  at             INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ai_usage_user ON ai_usage(user_id, at);

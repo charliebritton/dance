@@ -1,36 +1,50 @@
-// App shell: sign-in, routing, header, hero, and polling so each partner sees the other's changes.
+// App shell: routing, header and nav (by role), hero, and polling so everyone sees each other's changes.
 import { drawFrame, makePlayer } from "./engine.js";
-import { BASE, $, $$, S, api, esc, hooks, layersFor, loadSyllabus, ls, refresh, toast } from "./core.js";
+import { BASE, $, S, api, hooks, isAdmin, layersFor, loadMe, loadSyllabus, ls, refresh } from "./core.js";
+import * as home from "./views/home.js";
 import * as syllabus from "./views/syllabus.js";
 import * as routines from "./views/routines.js";
 import * as practice from "./views/practice.js";
+import * as lessons from "./views/lessons.js";
+import * as competitions from "./views/competitions.js";
+import * as admin from "./views/admin.js";
+import { renderAccount, renderJoin, renderLogin } from "./views/auth.js";
 
-const VIEWS = { syllabus, routines, practice };
-let current = { view: "syllabus", params: {} };
+const VIEWS = { home, syllabus, routines, practice, lessons, competitions, admin };
+const MEMBERS_ONLY = new Set(["routines", "practice", "lessons", "competitions", "admin", "account"]);
+let current = { view: "home", params: {} };
 
 function parse() {
   const [a, b, c] = location.pathname.slice(BASE.length).split("/").filter(Boolean);
-  if (a === "routines") return { view: "routines", params: { id: b } };
-  if (a === "practice") return { view: "practice", params: { id: b } };
-  if (a === "login") return { view: "login", params: {} };
-  return { view: "syllabus", params: { dance: b, fig: c } };
+  switch (a) {
+    case undefined: case "home": return { view: "home", params: {} };
+    case "syllabus": return { view: "syllabus", params: { dance: b, fig: c } };
+    case "routines": return { view: "routines", params: { id: b } };
+    case "practice": return b === "lesson" ? { view: "practice", params: { lesson: c } } : { view: "practice", params: { id: b } };
+    case "lessons": return { view: "lessons", params: { id: b } };
+    case "competitions": case "admin": case "account": case "login": return { view: a, params: {} };
+    case "join": return { view: "join", params: { token: b } };
+    default: return { view: "syllabus", params: { dance: a, fig: b } };
+  }
 }
 
 function header() {
-  $("#nav").innerHTML = ["syllabus", "routines", "practice"].map((n) =>
-    `<a href="${BASE}/${n}" data-link class="tab" aria-current="${current.view === n ? "page" : "false"}">${n[0].toUpperCase() + n.slice(1)}</a>`).join("");
+  const tabs = [["home", "Home"], ["syllabus", "Syllabus"], ...(S.me ? [["routines", "Routines"], ["lessons", "Lessons"], ["competitions", "Competitions"]] : []),
+    ...(isAdmin() ? [["admin", "Admin"]] : [])];
+  $("#nav").innerHTML = tabs.map(([n, l]) =>
+    `<a href="${BASE}/${n === "home" ? "" : n}" data-link class="tab" aria-current="${current.view === n || (n === "routines" && current.view === "practice") ? "page" : "false"}">${l}</a>`).join("");
   $("#roleSeg").innerHTML = [["man", "Leader"], ["lady", "Follower"], ["both", "Both"]].map(([k, l]) =>
     `<button data-role="${k}" aria-pressed="${S.role === k}">${l}</button>`).join("");
-  $("#who").textContent = S.me?.name || "";
+  $("#stepsFor").hidden = !["syllabus", "practice"].includes(current.view);
+  $("#acct").innerHTML = S.me
+    ? `<a class="acctlink" href="${BASE}/account" data-link aria-current="${current.view === "account" ? "page" : "false"}">${S.me.name.split(" ")[0]}</a>`
+    : `<a class="btn sm acc" href="${BASE}/login" data-link>Sign in</a>`;
 }
 
 function hero() {
-  const show = current.view === "syllabus" && !current.params.fig && !current.params.dance;
+  const show = current.view === "home" && !S.me;
   $("#hero").hidden = !show;
   if (!show) { heroPlayer.pause(); return; }
-  $("#sFigs").textContent = S.figs.size;
-  $("#sCharts").textContent = new Set([...Object.keys(S.starter), ...Object.keys(S.charts)]).size;
-  $("#sRoutines").textContent = S.routines.length;
   if (!heroLayers) {
     heroPaint(-1);
     let t = 0;
@@ -49,59 +63,28 @@ const heroPlayer = makePlayer((i, f) => heroPaint(i + f));
 
 export function render() {
   header();
-  const root = $("#view");
-  if (current.view === "login") return;
   hero();
+  const root = $("#view");
   if (current.view !== "syllabus") syllabus.stopSyllabus();
   if (current.view !== "practice") practice.stopPractice();
+  root.onclick = root.onchange = root.oninput = root.onsubmit = root.onkeydown = null;
+  if (current.view === "login") return renderLogin(root);
+  if (current.view === "join") return renderJoin(root, current.params.token);
+  if (current.view === "account") return renderAccount(root);
   VIEWS[current.view].render(root, current.params);
-  if (S.me?.readonly) lockInputs(root);
-}
-
-// public preview: nothing can be saved, so editing fields become read-only (pickers and playback still work)
-function lockInputs(root) {
-  for (const el of root.querySelectorAll("#figNote, #rName, #rLevel, #rBrief, .item input")) el.disabled = true;
 }
 
 function route() {
   current = parse();
-  if (S.me?.readonly && current.view === "login") { history.replaceState(null, "", BASE + "/syllabus"); current = parse(); }
-  if (current.view === "login" || !S.me) { showLogin(); return; }
-  document.body.classList.remove("signed-out");
+  if (MEMBERS_ONLY.has(current.view) && !S.me) { history.replaceState(null, "", BASE + "/login"); current = { view: "login", params: {} }; }
+  if (current.view === "admin" && !isAdmin()) { history.replaceState(null, "", BASE + "/"); current = { view: "home", params: {} }; }
+  if (S.me && (current.view === "login" || current.view === "join")) { history.replaceState(null, "", BASE + "/"); current = { view: "home", params: {} }; }
   render();
   window.scrollTo({ top: 0 });
 }
 hooks.render = render;
 hooks.route = route;
-
-function showLogin() {
-  document.body.classList.add("signed-out");
-  $("#hero").hidden = true;
-  if (location.pathname !== BASE + "/login") history.replaceState(null, "", BASE + "/login");
-  const mode = ls.get("loginMode", "in");
-  $("#view").innerHTML = `<section class="login panel pad">
-    <h1 class="display">${mode === "in" ? "Sign in" : "Create your account"}</h1>
-    <p class="muted">${mode === "in" ? "Rise & Fall is shared between you and your partner." : "You'll need the invite code from whoever set up the site."}</p>
-    <form id="authForm" class="stack">
-      <label class="field">Your name<input class="input" name="name" autocomplete="username" required maxlength="40"></label>
-      <label class="field">Password<input class="input" name="password" type="password" autocomplete="${mode === "in" ? "current-password" : "new-password"}" required minlength="6"></label>
-      ${mode === "up" ? `<label class="field">Invite code<input class="input" name="invite" required></label>` : ""}
-      <button class="btn solid" type="submit">${mode === "in" ? "Sign in" : "Create account"}</button>
-      <p class="err" id="authErr" role="alert"></p>
-    </form>
-    <button class="btn ghost sm" id="authSwap">${mode === "in" ? "New here? Create an account" : "Already have an account? Sign in"}</button>
-  </section>`;
-  $("#authSwap").onclick = () => { ls.set("loginMode", mode === "in" ? "up" : "in"); showLogin(); };
-  $("#authForm").onsubmit = async (ev) => {
-    ev.preventDefault();
-    const fd = Object.fromEntries(new FormData(ev.target));
-    try {
-      await api("POST", mode === "in" ? "/api/login" : "/api/signup", fd);
-      S.me = await api("GET", "/api/me"); await refresh();
-      history.replaceState(null, "", BASE + "/syllabus"); route();
-    } catch (e) { $("#authErr").textContent = e.message; }
-  };
-}
+hooks.headerOnly = () => header();
 
 // ── global events ────────────────────────────────────────────────────
 document.addEventListener("click", (ev) => {
@@ -114,7 +97,6 @@ document.addEventListener("click", (ev) => {
   }
   const role = ev.target.closest("#roleSeg [data-role]");
   if (role) { S.role = role.dataset.role; ls.set("role", S.role); render(); return; }
-  if (ev.target.closest("#signOut")) api("POST", "/api/logout").finally(() => { S.me = null; location.href = BASE + "/login"; });
 });
 window.addEventListener("popstate", route);
 
@@ -141,10 +123,10 @@ addEventListener("scroll", hideTip, { passive: true, capture: true });
 // pick up your partner's changes without trampling what you're doing
 let lastState = "";
 async function poll() {
-  if (!S.me || document.hidden) return;
+  if (document.hidden || ["login", "join", "account", "admin"].includes(current.view)) return;
   try {
     await refresh();
-    const sig = JSON.stringify([S.routines, S.charts, S.notes, S.videos, S.users]);
+    const sig = stateSig();
     if (sig === lastState) return;
     const first = !lastState; lastState = sig;
     if (first) return;
@@ -152,18 +134,15 @@ async function poll() {
     const typing = a && (a.tagName === "TEXTAREA" || (a.tagName === "INPUT" && a.type !== "checkbox") || a.tagName === "SELECT");
     if (typing || VIEWS[current.view]?.isBusy?.()) return;
     render();
-  } catch (e) { if (e.status === 401) location.href = BASE + "/login"; }
+  } catch {}
 }
+const stateSig = () => JSON.stringify([S.routines, S.charts, S.verified, S.notes, S.videos, S.users, S.lessons, S.competitions, S.comment_counts]);
 setInterval(poll, 15000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
 
 async function boot() {
-  try { await loadSyllabus(); }
+  try { await loadSyllabus(); await loadMe(); await refresh(); lastState = stateSig(); }
   catch { $("#view").innerHTML = `<div class="panel pad empty">Couldn't reach the server. Check your connection and reload.</div>`; return; }
-  try { S.me = await api("GET", "/api/me"); await refresh(); lastState = JSON.stringify([S.routines, S.charts, S.notes, S.videos, S.users]); }
-  catch { S.me = null; }
-  if (S.me?.readonly) { document.body.classList.add("readonly"); $("#roBanner").hidden = false; }
-  if (S.me && location.pathname === BASE + "/login") history.replaceState(null, "", BASE + "/syllabus");
   route();
 }
 boot();

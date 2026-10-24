@@ -16,13 +16,13 @@
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="__BASE__/syllabus" data-link aria-label="Rise and Fall home">
+    <a class="logo" href="__BASE__/" data-link aria-label="Rise and Fall home">
       <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 27 A12 12 0 0 1 27 27" fill="none" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="1.4"><line x1="15" y1="27" x2="15" y2="9"/><line x1="15" y1="27" x2="7" y2="12"/><line x1="15" y1="27" x2="23" y2="12"/><line x1="15" y1="27" x2="4" y2="19"/><line x1="15" y1="27" x2="26" y2="19"/></g><circle cx="15" cy="27" r="3" fill="currentColor"/></svg>
       <span>Rise &amp; Fall</span>
     </a>
     <nav class="tabs" id="nav" aria-label="Sections"></nav>
-    <div class="steps-for"><span class="lbl">Steps for</span><div class="seg" id="roleSeg" role="group" aria-label="Whose steps to show"></div></div>
-    <div class="acct"><span id="who"></span><button class="btn ghost sm" id="signOut">Sign out</button></div>
+    <div class="steps-for" id="stepsFor"><span class="lbl">Steps for</span><div class="seg" id="roleSeg" role="group" aria-label="Whose steps to show"></div></div>
+    <div class="acct" id="acct"></div>
   </div>
 </header>
 
@@ -31,16 +31,15 @@
   <div class="wrap">
     <div class="hero-card">
       <div class="eyebrow">ISTD Standard &amp; Latin · Bronze to Gold</div>
-      <h1 class="display">Agree it together. Practise it apart.</h1>
-      <p>Look up any figure with its book-style step chart and animated footprints, build a routine with Claude, sign it off with your partner, then drill your own steps to the beat.</p>
-      <div class="stats"><div><b id="sDances">10</b><span>dances</span></div><div><b id="sFigs">0</b><span>figures</span></div><div><b id="sCharts">0</b><span>step charts</span></div><div><b id="sRoutines">0</b><span>routines</span></div></div>
+      <h1 class="display">The step book for university ballroom &amp; Latin</h1>
+      <p>Look up a figure, see exactly where each foot goes, and practise it to the beat. Members also keep their routines, lesson notes and the competition calendar here.</p>
     </div>
     <figure class="hero-demo" aria-hidden="true"><svg id="heroSvg" class="dia"></svg><figcaption>Waltz · Natural Turn · Leader</figcaption></figure>
   </div>
 </section>
 
-<div class="ro-banner" id="roBanner" hidden><div class="wrap">Preview: browse the syllabus, footprints and the example routine. Saving and accounts are switched off for now.</div></div>
 <main class="wrap" id="view"></main>
+<footer class="foot"><div class="wrap"><span>Rise &amp; Fall</span><span>An independent project. Not affiliated with or endorsed by SUBLDS.</span><span>Step charts follow the ISTD technique books; check them with your teacher.</span></div></footer>
 <div class="toast" id="toast" role="status" hidden></div>
 <script type="module" src="__BASE__/static/app.js"></script>
 </body>

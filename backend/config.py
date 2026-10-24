@@ -10,17 +10,25 @@ class Settings(BaseSettings):
 
     anthropic_api_key: str = ""
     claude_model: str = "claude-opus-5-5"
+    # Who may call Claude: "admin" (just Charlie for now) or "all" members, each capped per day.
+    ai_access: str = "admin"
+    ai_daily_limit: int = 10
+    # USD per million tokens for claude-opus-5-5, used to estimate cost in the usage log.
+    ai_price_in: float = 4.0
+    ai_price_out: float = 20.0
 
-    # New accounts need this code, so only you and your partner can sign up.
-    invite_code: str = "changeme"
     session_secret: str = "changeme-too"
     secure_cookies: bool = False      # True behind HTTPS in production
     base_path: str = ""               # e.g. "/dance" when served at chza.me/dance (the proxy strips it)
-    read_only: bool = False           # public preview: anyone can browse, nobody can sign in or save
+
+    # Passkeys: the relying-party id is the bare domain, the origin is scheme + host (+ port) of the site.
+    rp_id: str = "localhost"
+    rp_name: str = "Rise & Fall"
+    origin: str = "http://localhost:8021"
 
     db_path: Path = ROOT / "data" / "dance.db"
     upload_dir: Path = ROOT / "data" / "uploads"
-    max_upload_mb: int = 300
+    max_upload_mb: int = 500
 
 
 settings = Settings()
