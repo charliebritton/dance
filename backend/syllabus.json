@@ -1,0 +1,486 @@
+{
+ "levels": [
+  "Bronze",
+  "Silver",
+  "Gold"
+ ],
+ "dances": [
+  {
+   "id": "waltz",
+   "name": "Waltz",
+   "style": "Standard",
+   "sig": "3/4",
+   "bpb": 3,
+   "tempo": [
+    28,
+    30
+   ],
+   "color": "peri",
+   "levels": {
+    "Bronze": [
+     "RF Closed Change",
+     "LF Closed Change",
+     "Natural Turn",
+     "Reverse Turn",
+     "Natural Spin Turn",
+     "Whisk",
+     "Chassé from PP",
+     "Closed Impetus",
+     "Hesitation Change",
+     "Outside Change",
+     "Reverse Corté",
+     "Back Whisk",
+     "Basic Weave",
+     "Double Reverse Spin",
+     "Reverse Pivot",
+     "Back Lock",
+     "Progressive Chassé to Right"
+    ],
+    "Silver": [
+     "Weave from PP",
+     "Closed Telemark",
+     "Open Telemark",
+     "Cross Hesitation",
+     "Wing",
+     "Open Impetus",
+     "Outside Spin",
+     "Turning Lock",
+     "Drag Hesitation"
+    ],
+    "Gold": [
+     "Left Whisk",
+     "Contra Check",
+     "Closed Wing",
+     "Turning Lock to Right",
+     "Fallaway Reverse and Slip Pivot",
+     "Hover Corté"
+    ]
+   }
+  },
+  {
+   "id": "foxtrot",
+   "name": "Foxtrot",
+   "style": "Standard",
+   "sig": "4/4",
+   "bpb": 4,
+   "tempo": [
+    28,
+    30
+   ],
+   "color": "gilt",
+   "levels": {
+    "Bronze": [
+     "Feather Step",
+     "Three Step",
+     "Natural Turn",
+     "Reverse Turn",
+     "Closed Impetus and Feather Finish",
+     "Natural Weave",
+     "Change of Direction",
+     "Basic Weave"
+    ],
+    "Silver": [
+     "Closed Telemark",
+     "Open Telemark and Feather Ending",
+     "Top Spin",
+     "Hover Feather",
+     "Hover Telemark",
+     "Natural Telemark",
+     "Hover Cross",
+     "Open Impetus",
+     "Weave from PP",
+     "Reverse Wave",
+     "Natural Twist Turn"
+    ],
+    "Gold": [
+     "Natural Zig-Zag from PP",
+     "Fallaway Reverse and Slip Pivot",
+     "Natural Hover Telemark",
+     "Bounce Fallaway with Weave Ending",
+     "Curved Feather to Back Feather",
+     "Extended Reverse Wave",
+     "Curved Three Step",
+     "Back Feather"
+    ]
+   }
+  },
+  {
+   "id": "quickstep",
+   "name": "Quickstep",
+   "style": "Standard",
+   "sig": "4/4",
+   "bpb": 4,
+   "tempo": [
+    50,
+    52
+   ],
+   "color": "coral",
+   "levels": {
+    "Bronze": [
+     "Quarter Turn to Right",
+     "Progressive Chassé",
+     "Forward Lock",
+     "Natural Turn",
+     "Natural Pivot Turn",
+     "Natural Spin Turn",
+     "Chassé Reverse Turn",
+     "Back Lock",
+     "Reverse Pivot",
+     "Progressive Chassé to Right",
+     "Tipple Chassé to Right",
+     "Running Finish",
+     "Cross Chassé",
+     "Change of Direction",
+     "Double Reverse Spin",
+     "Quick Open Reverse",
+     "Zig-Zag, Back Lock and Running Finish",
+     "Natural Turn with Hesitation"
+    ],
+    "Silver": [
+     "Fishtail",
+     "Running Right Turn",
+     "V6",
+     "Closed Telemark",
+     "Cross Swivel",
+     "Four Quick Run"
+    ],
+    "Gold": [
+     "Six Quick Twinkle",
+     "Rumba Cross",
+     "Tipsy to Right",
+     "Tipsy to Left",
+     "Hover Corté"
+    ]
+   }
+  },
+  {
+   "id": "tango",
+   "name": "Tango",
+   "style": "Standard",
+   "sig": "2/4",
+   "bpb": 2,
+   "tempo": [
+    31,
+    33
+   ],
+   "color": "scarlet",
+   "levels": {
+    "Bronze": [
+     "Walk",
+     "Progressive Side Step",
+     "Progressive Link",
+     "Closed Promenade",
+     "Rock Turn",
+     "Open Reverse Turn, Lady Outside",
+     "Open Reverse Turn, Lady in Line",
+     "Back Corté",
+     "Open Promenade",
+     "Left Foot and Right Foot Rocks",
+     "Natural Twist Turn",
+     "Natural Promenade Turn",
+     "Promenade Link",
+     "Four Step",
+     "Back Open Promenade"
+    ],
+    "Silver": [
+     "Outside Swivel",
+     "Fallaway Promenade",
+     "Four Step Change",
+     "Brush Tap",
+     "Basic Reverse Turn",
+     "Progressive Side Step Reverse Turn"
+    ],
+    "Gold": [
+     "Fallaway Four Step",
+     "Oversway",
+     "Chase",
+     "Five Step",
+     "Contra Check",
+     "Reverse Pivot"
+    ]
+   }
+  },
+  {
+   "id": "viennese",
+   "name": "Viennese Waltz",
+   "style": "Standard",
+   "sig": "3/4",
+   "bpb": 3,
+   "tempo": [
+    58,
+    60
+   ],
+   "color": "teal",
+   "levels": {
+    "Bronze": [
+     "Natural Turn",
+     "Reverse Turn",
+     "Forward Change (Natural to Reverse)",
+     "Forward Change (Reverse to Natural)"
+    ],
+    "Silver": [
+     "Backward Change (Natural to Reverse)",
+     "Backward Change (Reverse to Natural)",
+     "Reverse Fleckerl"
+    ],
+    "Gold": [
+     "Natural Fleckerl",
+     "Contra Check"
+    ]
+   }
+  },
+  {
+   "id": "chacha",
+   "name": "Cha Cha Cha",
+   "style": "Latin",
+   "sig": "4/4",
+   "bpb": 4,
+   "tempo": [
+    30,
+    32
+   ],
+   "color": "coral",
+   "levels": {
+    "Bronze": [
+     "Closed Basic",
+     "Open Basic",
+     "Basic in Place",
+     "New York",
+     "Spot Turn",
+     "Underarm Turn",
+     "Shoulder to Shoulder",
+     "Hand to Hand",
+     "Three Cha Chas",
+     "Side Steps",
+     "There and Back",
+     "Time Steps",
+     "Fan",
+     "Alemana",
+     "Hockey Stick",
+     "Natural Top",
+     "Natural Opening Out Movement",
+     "Closed Hip Twist"
+    ],
+    "Silver": [
+     "Open Hip Twist",
+     "Reverse Top",
+     "Opening Out from Reverse Top",
+     "Aida",
+     "Spiral",
+     "Cross Basic",
+     "Cuban Breaks",
+     "Split Cuban Breaks",
+     "Chase"
+    ],
+    "Gold": [
+     "Advanced Hip Twist",
+     "Hip Twist Spiral",
+     "Turkish Towel",
+     "Sweetheart",
+     "Follow My Leader",
+     "Rope Spinning"
+    ]
+   }
+  },
+  {
+   "id": "samba",
+   "name": "Samba",
+   "style": "Latin",
+   "sig": "2/4",
+   "bpb": 2,
+   "tempo": [
+    50,
+    52
+   ],
+   "color": "yellow",
+   "levels": {
+    "Bronze": [
+     "Natural Basic Movement",
+     "Reverse Basic Movement",
+     "Side Basic Movement",
+     "Progressive Basic Movement",
+     "Outside Basic Movement",
+     "Whisks to Right and Left",
+     "Samba Walks in PP",
+     "Side Samba Walk",
+     "Stationary Samba Walks",
+     "Rhythm Bounce",
+     "Volta Spot Turn",
+     "Travelling Bota Fogos Forward",
+     "Criss Cross Bota Fogos",
+     "Travelling Voltas",
+     "Reverse Turn",
+     "Corta Jaca",
+     "Closed Rocks"
+    ],
+    "Silver": [
+     "Open Rocks",
+     "Backward Rocks",
+     "Plait",
+     "Argentine Crosses",
+     "Rolling off the Arm",
+     "Promenade and Counter Promenade Runs",
+     "Maypole"
+    ],
+    "Gold": [
+     "Contra Bota Fogos",
+     "Roundabout",
+     "Natural Roll",
+     "Reverse Roll",
+     "Three Step Turn",
+     "Samba Locks",
+     "Cruzados Walks and Locks"
+    ]
+   }
+  },
+  {
+   "id": "rumba",
+   "name": "Rumba",
+   "style": "Latin",
+   "sig": "4/4",
+   "bpb": 4,
+   "tempo": [
+    24,
+    26
+   ],
+   "color": "scarlet",
+   "levels": {
+    "Bronze": [
+     "Closed Basic",
+     "Open Basic",
+     "Basic in Place",
+     "Cucarachas",
+     "Progressive Walks Forward and Back",
+     "Side Step",
+     "New York",
+     "Spot Turn",
+     "Underarm Turn",
+     "Shoulder to Shoulder",
+     "Hand to Hand",
+     "Fan",
+     "Alemana",
+     "Hockey Stick",
+     "Natural Top",
+     "Natural Opening Out Movement",
+     "Closed Hip Twist"
+    ],
+    "Silver": [
+     "Open Hip Twist",
+     "Reverse Top",
+     "Opening Out from Reverse Top",
+     "Aida",
+     "Spiral",
+     "Curl",
+     "Rope Spinning",
+     "Cross Basic",
+     "Sliding Doors",
+     "Fencing"
+    ],
+    "Gold": [
+     "Advanced Hip Twist",
+     "Continuous Hip Twist",
+     "Circular Hip Twist",
+     "Three Threes",
+     "Three Alemanas",
+     "Hip Twist Spiral"
+    ]
+   }
+  },
+  {
+   "id": "paso",
+   "name": "Paso Doble",
+   "style": "Latin",
+   "sig": "2/4",
+   "bpb": 2,
+   "tempo": [
+    60,
+    62
+   ],
+   "color": "blue",
+   "levels": {
+    "Bronze": [
+     "Sur Place",
+     "Basic Movement",
+     "Chassés to Right and Left",
+     "Drag",
+     "Déplacement (Attack)",
+     "Promenade Link",
+     "Promenade",
+     "Écart (Fallaway Whisk)",
+     "Separation",
+     "Separation with Lady's Caping Walks",
+     "Fallaway Ending to Separation",
+     "Huit",
+     "Sixteen",
+     "Promenade and Counter Promenade",
+     "Grand Circle",
+     "Open Telemark"
+    ],
+    "Silver": [
+     "La Passe",
+     "Banderillas",
+     "Twist Turn",
+     "Fallaway Reverse Turn",
+     "Coup de Pique",
+     "Left Foot Variation",
+     "Spanish Line",
+     "Flamenco Taps"
+    ],
+    "Gold": [
+     "Syncopated Separation",
+     "Travelling Spins from PP",
+     "Travelling Spins from CPP",
+     "Fregolina",
+     "Twists",
+     "Chassé Cape"
+    ]
+   }
+  },
+  {
+   "id": "jive",
+   "name": "Jive",
+   "style": "Latin",
+   "sig": "4/4",
+   "bpb": 4,
+   "tempo": [
+    42,
+    44
+   ],
+   "color": "teal",
+   "levels": {
+    "Bronze": [
+     "Basic in Place",
+     "Fallaway Rock",
+     "Fallaway Throwaway",
+     "Link",
+     "Change of Places Right to Left",
+     "Change of Places Left to Right",
+     "Change of Hands Behind Back",
+     "American Spin",
+     "Walks",
+     "Stop and Go",
+     "Whip",
+     "Mooch"
+    ],
+    "Silver": [
+     "Whip Throwaway",
+     "Rolling off the Arm",
+     "Simple Spin",
+     "Miami Special",
+     "Curly Whip",
+     "Shoulder Spin",
+     "Toe Heel Swivels",
+     "Flicks into Breaks"
+    ],
+    "Gold": [
+     "Chicken Walks",
+     "Catapult",
+     "Stalking Walks, Flicks and Break",
+     "Spanish Arms",
+     "Reverse Whip",
+     "Windmill"
+    ]
+   }
+  }
+ ]
+}

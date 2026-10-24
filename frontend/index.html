@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-GB" data-base="__BASE__">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rise &amp; Fall</title>
+<meta name="description" content="ISTD ballroom and Latin step book: footprint diagrams, shared routines and practice to the beat.">
+<meta name="theme-color" content="#1E2240">
+<link rel="manifest" href="__BASE__/manifest.json">
+<link rel="icon" href="__BASE__/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="__BASE__/static/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="__BASE__/syllabus" data-link aria-label="Rise and Fall home">
+      <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 27 A12 12 0 0 1 27 27" fill="none" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="1.4"><line x1="15" y1="27" x2="15" y2="9"/><line x1="15" y1="27" x2="7" y2="12"/><line x1="15" y1="27" x2="23" y2="12"/><line x1="15" y1="27" x2="4" y2="19"/><line x1="15" y1="27" x2="26" y2="19"/></g><circle cx="15" cy="27" r="3" fill="currentColor"/></svg>
+      <span>Rise &amp; Fall</span>
+    </a>
+    <nav class="tabs" id="nav" aria-label="Sections"></nav>
+    <div class="steps-for"><span class="lbl">Steps for</span><div class="seg" id="roleSeg" role="group" aria-label="Whose steps to show"></div></div>
+    <div class="acct"><span id="who"></span><button class="btn ghost sm" id="signOut">Sign out</button></div>
+  </div>
+</header>
+
+<section class="hero" id="hero" hidden aria-label="Introduction">
+  <div class="blobs" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b4"></div><div class="blob b3"></div><div class="dots"></div></div>
+  <div class="wrap">
+    <div class="hero-card">
+      <div class="eyebrow">ISTD Standard &amp; Latin · Bronze to Gold</div>
+      <h1 class="display">Agree it together. Practise it apart.</h1>
+      <p>Look up any figure with its book-style step chart and animated footprints, build a routine with Claude, sign it off with your partner, then drill your own steps to the beat.</p>
+      <div class="stats"><div><b id="sDances">10</b><span>dances</span></div><div><b id="sFigs">0</b><span>figures</span></div><div><b id="sCharts">0</b><span>step charts</span></div><div><b id="sRoutines">0</b><span>routines</span></div></div>
+    </div>
+    <figure class="hero-demo" aria-hidden="true"><svg id="heroSvg" class="dia"></svg><figcaption>Waltz · Natural Turn · Leader</figcaption></figure>
+  </div>
+</section>
+
+<div class="ro-banner" id="roBanner" hidden><div class="wrap">Preview: browse the syllabus, footprints and the example routine. Saving and accounts are switched off for now.</div></div>
+<main class="wrap" id="view"></main>
+<div class="toast" id="toast" role="status" hidden></div>
+<script type="module" src="__BASE__/static/app.js"></script>
+</body>
+</html>

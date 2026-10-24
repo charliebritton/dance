@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rise-dev",
+      "runtimeExecutable": "/home/charlie/Documents/rise-and-fall/backend/venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "main:app", "--app-dir", "/home/charlie/Documents/rise-and-fall/backend", "--reload", "--reload-dir", "/home/charlie/Documents/rise-and-fall/backend", "--port", "8021"],
+      "port": 8021
+    }
+  ]
+}

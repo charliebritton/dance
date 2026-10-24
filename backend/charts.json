@@ -1,0 +1,4554 @@
+{
+ "waltz.rf-closed-change": {
+  "start": {
+   "man": "F DC",
+   "lady": "B DC"
+  },
+  "timing": "1 2 3",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Natural Turn"
+  ],
+  "fol": [
+   "Reverse Turn"
+  ],
+  "tip": "Changes from natural to reverse figures. Keep the closing foot soft and the body travelling over the side step."
+ },
+ "waltz.lf-closed-change": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "1 2 3",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Reverse Turn"
+  ],
+  "fol": [
+   "Natural Turn",
+   "Natural Spin Turn"
+  ],
+  "tip": "Changes from reverse to natural figures."
+ },
+ "waltz.natural-turn": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "123 456",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 4, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 135,
+    "tt": "⅜ between 4–5, body turns less",
+    "fw": "T",
+    "rf": "Continue to rise on 5",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1,
+    "al": "Pointing DC"
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 135,
+    "tt": "⅜ between 1–2, body turns less",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1,
+    "al": "Pointing LOD"
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 4",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Continue to rise on 5",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "LF Closed Change",
+   "Chassé from PP",
+   "Outside Change"
+  ],
+  "fol": [
+   "RF Closed Change",
+   "Hesitation Change (after 1–3)",
+   "Natural Spin Turn (1–3 replaced)"
+  ],
+  "tip": "⅜ on each half. Man's step 5 is a small step with the toe pointing DC while the body is still turning."
+ },
+ "waltz.reverse-turn": {
+  "start": {
+   "man": "F DC",
+   "lady": "B DC"
+  },
+  "timing": "123 456",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": -45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 4, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": -135,
+    "tt": "⅜ between 4–5, body turns less",
+    "fw": "T",
+    "rf": "Continue to rise on 5",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1,
+    "al": "Pointing DW"
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": -135,
+    "tt": "⅜ between 1–2, body turns less",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1,
+    "al": "Pointing LOD"
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 4",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Continue to rise on 5",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": -45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "RF Closed Change",
+   "Hesitation Change"
+  ],
+  "fol": [
+   "LF Closed Change",
+   "Whisk"
+  ],
+  "tip": "Mirror image of the Natural Turn, turning ¾ to the left overall."
+ },
+ "waltz.whisk": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "1 2 3",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF diagonally fwd (side and slightly fwd)",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF crosses behind RF in PP",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": false,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF diagonally back (side and slightly back)",
+    "d": "sideback",
+    "t": 45,
+    "tt": "⅛ between 1–2",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF crosses behind LF in PP",
+    "d": "xbehind",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Reverse Turn",
+   "LF Closed Change"
+  ],
+  "fol": [
+   "Chassé from PP",
+   "Weave from PP"
+  ],
+  "tip": "Man has no turn; the Lady turns ¼ to the right into Promenade Position."
+ },
+ "waltz.chasse-from-pp": {
+  "start": {
+   "man": "F DW",
+   "lady": "F DC"
+  },
+  "timing": "1 2 & 3",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd and across in PP and CBMP",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "1",
+    "b": 1,
+    "mv": "LOD"
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly fwd",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and &",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "",
+    "cbm": false,
+    "sw": "L",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly fwd",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "S",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF fwd and across in PP and CBMP",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "1",
+    "b": 1,
+    "mv": "LOD"
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -45,
+    "tt": "⅛ between 1–2",
+    "fw": "T",
+    "rf": "Continue to rise on 2 and &",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": -45,
+    "tt": "⅛ between 2–&",
+    "fw": "T",
+    "rf": "",
+    "cbm": false,
+    "sw": "R",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly back",
+    "d": "sideback",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "S",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Whisk"
+  ],
+  "fol": [
+   "Natural Turn",
+   "Natural Spin Turn"
+  ],
+  "tip": "Man ends with RF ready to step outside partner. Lady turns ¼ to the left to close back to her partner."
+ },
+ "waltz.natural-spin-turn": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "123 123",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back, pivoting",
+    "d": "back",
+    "t": 0,
+    "tt": "Pivot ½ to R on 4",
+    "fw": "TH T",
+    "rf": "NFR",
+    "cbm": true,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 180,
+    "tt": "½ pivot on 4",
+    "fw": "HT",
+    "rf": "Rise e/o 5",
+    "cbm": true,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly back",
+    "d": "sideback",
+    "t": 135,
+    "tt": "⅜ between 5–6",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 135,
+    "tt": "⅜ between 1–2, body turns less",
+    "fw": "T",
+    "rf": "Continue to rise on 2",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1,
+    "al": "Pointing LOD"
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Continue to rise on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd, pivoting",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Pivot ½ to R on 4",
+    "fw": "HT",
+    "rf": "",
+    "cbm": true,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back and slightly to side",
+    "d": "back",
+    "t": 180,
+    "tt": "½ pivot on 4",
+    "fw": "TH",
+    "rf": "Rise e/o 5, NFR",
+    "cbm": true,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF brushes to LF, then diagonally fwd",
+    "d": "diagfwd",
+    "t": 135,
+    "tt": "⅜ between 5–6",
+    "fw": "TH",
+    "rf": "Continue to rise on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "LF Closed Change",
+   "Chassé from PP"
+  ],
+  "fol": [
+   "Reverse Turn (4–6)",
+   "Reverse Corté",
+   "Double Reverse Spin"
+  ],
+  "tip": "Often used to turn a corner. Keep the pivot on step 4 compact with the thighs close."
+ },
+ "foxtrot.feather-step": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "S Q Q",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Slight body turn to L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF fwd, preparing to step outside partner",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd in CBMP, outside partner",
+    "d": "fwdcbmp",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Slight body turn to L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back in CBMP",
+    "d": "backcbmp",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Three Step",
+   "Natural Turn"
+  ],
+  "fol": [
+   "Reverse Turn",
+   "Three Step"
+  ],
+  "tip": "Step 3 is taken in CBMP with the Man outside partner."
+ },
+ "foxtrot.three-step": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "S Q Q",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Feather Step",
+   "Reverse Turn"
+  ],
+  "fol": [
+   "Natural Turn"
+  ],
+  "tip": "Man steps back in line with his partner after a Feather."
+ },
+ "foxtrot.reverse-turn": {
+  "start": {
+   "man": "F DC",
+   "lady": "B DC"
+  },
+  "timing": "S Q Q S Q Q",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": -45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 4, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF to side, small step",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd in CBMP, outside partner",
+    "d": "fwdcbmp",
+    "t": -45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Up on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF (heel turn)",
+    "d": "close",
+    "t": -135,
+    "tt": "⅜ heel turn on 2",
+    "fw": "HT",
+    "rf": "Rise e/o 2",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly fwd",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "Body completes turn",
+    "fw": "TH",
+    "rf": "Up on 3, lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 4",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back in CBMP",
+    "d": "backcbmp",
+    "t": -45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Up on 6, lower e/o 6",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Feather Step"
+  ],
+  "fol": [
+   "Three Step"
+  ],
+  "tip": "Steps 4–6 are the Feather Finish. Lady's heel turn on step 2."
+ },
+ "quickstep.quarter-turn-to-right": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "S Q Q S",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 45,
+    "tt": "⅛ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly back",
+    "d": "sideback",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 45,
+    "tt": "⅛ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly fwd",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "pre": [
+   "Progressive Chassé",
+   "Natural Turn"
+  ],
+  "fol": [
+   "Progressive Chassé"
+  ],
+  "tip": "Usually danced with the Progressive Chassé as the Quarter Turns along the room."
+ },
+ "quickstep.progressive-chasse": {
+  "start": {
+   "man": "B DC",
+   "lady": "F DC"
+  },
+  "timing": "S Q Q S",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly fwd",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly back",
+    "d": "sideback",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "pre": [
+   "Quarter Turn to Right"
+  ],
+  "fol": [
+   "Forward Lock",
+   "Natural Turn"
+  ],
+  "tip": "Man ends facing DW with LF, ready to step RF outside partner."
+ },
+ "quickstep.forward-lock": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "S Q Q S",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd in CBMP, outside partner",
+    "d": "fwdcbmp",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "HT",
+    "rf": "Commence to rise e/o 1",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF diagonally fwd",
+    "d": "diagfwd",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF crosses behind LF",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF diagonally fwd",
+    "d": "diagfwd",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back in CBMP",
+    "d": "backcbmp",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "TH",
+    "rf": "Commence to rise e/o 1, NFR",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF diagonally back",
+    "d": "diagback",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF crosses in front of RF",
+    "d": "xfront",
+    "t": 0,
+    "tt": "",
+    "fw": "T",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "Q",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF diagonally back",
+    "d": "diagback",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "",
+    "cbm": false,
+    "sw": "S",
+    "c": "S",
+    "b": 2
+   }
+  ],
+  "pre": [
+   "Progressive Chassé",
+   "Forward Lock"
+  ],
+  "fol": [
+   "Natural Turn",
+   "Forward Lock",
+   "Natural Spin Turn"
+  ],
+  "tip": "Keep the locked foot tight behind and the hips square to DW."
+ },
+ "tango.walk": {
+  "start": {
+   "man": "F LOD",
+   "lady": "B LOD"
+  },
+  "timing": "S S",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Slight curve to L may be used",
+    "fw": "H",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BH",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BH",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Closed Promenade",
+   "Progressive Side Step"
+  ],
+  "fol": [
+   "Progressive Link",
+   "Progressive Side Step"
+  ],
+  "tip": "Tango walks are placed slightly across, with the LF walk taken in slight CBMP."
+ },
+ "tango.progressive-link": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "Q Q",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd in CBMP",
+    "d": "fwdcbmp",
+    "t": 0,
+    "tt": "Body turn ¼ to R… body only",
+    "fw": "H",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly back in PP",
+    "d": "sideback",
+    "t": 0,
+    "tt": "",
+    "fw": "IE of B, H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back in CBMP",
+    "d": "backcbmp",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "BH",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly back in PP",
+    "d": "sideback",
+    "t": 90,
+    "tt": "¼ between 1–2",
+    "fw": "IE of B, H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   }
+  ],
+  "pre": [
+   "Walk"
+  ],
+  "fol": [
+   "Closed Promenade",
+   "Open Promenade",
+   "Promenade Link"
+  ],
+  "tip": "A sharp head and body action takes the couple into PP; the Lady turns ¼ to the right."
+ },
+ "tango.closed-promenade": {
+  "start": {
+   "man": "F DW",
+   "lady": "F DC"
+  },
+  "timing": "S Q Q S",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF to side in PP",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "H",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1,
+    "mv": "LOD"
+   },
+   {
+    "f": "R",
+    "p": "RF fwd and across in PP and CBMP",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5,
+    "mv": "LOD"
+   },
+   {
+    "f": "L",
+    "p": "LF to side and slightly fwd",
+    "d": "sidefwd",
+    "t": 0,
+    "tt": "",
+    "fw": "IE of B, H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF closes slightly back of LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "WF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF to side in PP",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "H",
+    "rf": "No rise and fall",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1,
+    "mv": "LOD"
+   },
+   {
+    "f": "L",
+    "p": "LF fwd and across in PP and CBMP",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "H",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5,
+    "mv": "LOD"
+   },
+   {
+    "f": "R",
+    "p": "RF to side and slightly back",
+    "d": "sideback",
+    "t": -90,
+    "tt": "¼ between 2–3",
+    "fw": "BH",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "Q",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF closes slightly fwd of RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "WF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "S",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Progressive Link",
+   "Promenade Link"
+  ],
+  "fol": [
+   "Walk",
+   "Rock Turn",
+   "Open Reverse Turn, Lady Outside"
+  ],
+  "tip": "Man's step 4 closes slightly back; Lady closes slightly forward."
+ },
+ "viennese.natural-turn": {
+  "start": {
+   "man": "F DW",
+   "lady": "B DW"
+  },
+  "timing": "123 456",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Slight rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Slight rise e/o 4, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side, small step",
+    "d": "side",
+    "t": 135,
+    "tt": "⅜ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5 and 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "TH",
+    "rf": "Slight rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side, small step",
+    "d": "side",
+    "t": 135,
+    "tt": "⅜ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn R",
+    "fw": "HT",
+    "rf": "Slight rise e/o 4",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5 and 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Lower e/o 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Forward Change (Reverse to Natural)",
+   "Natural Turn"
+  ],
+  "fol": [
+   "Natural Turn",
+   "Forward Change (Natural to Reverse)"
+  ],
+  "tip": "Less rise than Waltz; the turn is continuous at speed."
+ },
+ "viennese.reverse-turn": {
+  "start": {
+   "man": "F DC",
+   "lady": "B DC"
+  },
+  "timing": "123 456",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Slight rise e/o 1",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF crosses in front of RF",
+    "d": "xfront",
+    "t": -45,
+    "tt": "⅛ between 2–3",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Slight rise e/o 4, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side, small step",
+    "d": "side",
+    "t": -135,
+    "tt": "⅜ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5 and 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 6",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "TH",
+    "rf": "Slight rise e/o 1, NFR",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side, small step",
+    "d": "side",
+    "t": -135,
+    "tt": "⅜ between 1–2",
+    "fw": "T",
+    "rf": "Up on 2 and 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "TH",
+    "rf": "Lower e/o 3",
+    "cbm": false,
+    "sw": "L",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Commence to turn L",
+    "fw": "HT",
+    "rf": "Slight rise e/o 4",
+    "cbm": true,
+    "sw": "S",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ between 4–5",
+    "fw": "T",
+    "rf": "Up on 5 and 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF crosses in front of RF",
+    "d": "xfront",
+    "t": -45,
+    "tt": "⅛ between 5–6",
+    "fw": "TH",
+    "rf": "Lower e/o 6",
+    "cbm": false,
+    "sw": "R",
+    "c": "3",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Forward Change (Natural to Reverse)",
+   "Reverse Turn"
+  ],
+  "fol": [
+   "Reverse Turn",
+   "Forward Change (Reverse to Natural)"
+  ],
+  "tip": "The crossing step is characteristic of the Viennese Reverse Turn."
+ },
+ "chacha.closed-basic": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "2 3 4&1",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Closed Basic",
+   "New York",
+   "Spot Turn",
+   "Hand to Hand"
+  ],
+  "fol": [
+   "New York",
+   "Spot Turn",
+   "Fan",
+   "Hand to Hand",
+   "Closed Basic"
+  ],
+  "tip": "Up to ¼ turn to L may be made over the basic. Forward and back steps are checked with the hips settling into the replace."
+ },
+ "chacha.new-york": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "2 3 4&1",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd in Left Side Position (check)",
+    "d": "fwd",
+    "t": 90,
+    "tt": "¼ to R on LF",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": -90,
+    "tt": "¼ to L",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF fwd in Right Side Position (check)",
+    "d": "fwd",
+    "t": -90,
+    "tt": "¼ to L on RF",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 90,
+    "tt": "¼ to R",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF fwd in Right Side Position (check)",
+    "d": "fwd",
+    "t": -90,
+    "tt": "¼ to L on RF",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 90,
+    "tt": "¼ to R",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd in Left Side Position (check)",
+    "d": "fwd",
+    "t": 90,
+    "tt": "¼ to R on LF",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": -90,
+    "tt": "¼ to L",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Closed Basic (1–5)",
+   "Spot Turn",
+   "Hand to Hand"
+  ],
+  "fol": [
+   "Spot Turn",
+   "Hand to Hand",
+   "Closed Basic (6–10)"
+  ],
+  "tip": "Step through with the foot further from your partner, checking forward; the free arm extends to the side."
+ },
+ "chacha.spot-turn": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "2 3 4&1",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd across in front of LF, toe turned out",
+    "d": "fwd",
+    "t": -90,
+    "tt": "¼ to L",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": -180,
+    "tt": "½ to L",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": -90,
+    "tt": "¼ to L (1 full turn over 1–3)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF fwd across in front of RF, toe turned out",
+    "d": "fwd",
+    "t": 90,
+    "tt": "¼ to R",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 180,
+    "tt": "½ to R",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 90,
+    "tt": "¼ to R (1 full turn over 1–3)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 0.5
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "&",
+    "b": 0.5
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Closed Basic (1–5)",
+   "New York"
+  ],
+  "fol": [
+   "New York",
+   "Closed Basic (6–10)",
+   "Hand to Hand"
+  ],
+  "tip": "Shown as the Man's Spot Turn to Left and the Lady's to Right, danced together without hold."
+ },
+ "rumba.closed-basic": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "2 3 4-1",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "Up to ¼ to L over 1–6 (optional)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back",
+    "d": "back",
+    "t": 0,
+    "tt": "Up to ¼ to L over 1–6 (optional)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   }
+  ],
+  "pre": [
+   "Closed Basic",
+   "Cucarachas",
+   "New York"
+  ],
+  "fol": [
+   "Fan",
+   "Natural Top",
+   "Hand to Hand",
+   "Cucarachas"
+  ],
+  "tip": "Step on 2; the hip settles through 4-1. Keep steps compact."
+ },
+ "rumba.cucarachas": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "2 3 4-1",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF to side, part weight",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "IE of B, F",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   },
+   {
+    "f": "R",
+    "p": "RF to side, part weight",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "IE of B, F",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF to side, part weight",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "IE of B, F",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   },
+   {
+    "f": "L",
+    "p": "LF to side, part weight",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "IE of B, F",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4-1",
+    "b": 2
+   }
+  ],
+  "pre": [
+   "Closed Basic"
+  ],
+  "fol": [
+   "Closed Basic"
+  ],
+  "tip": "Pressure into the floor on the side step, then replace."
+ },
+ "samba.natural-basic-movement": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 a 2",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "No turn (or up to ¼ to R)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF, part weight",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF, part weight",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF back",
+    "d": "back",
+    "t": 0,
+    "tt": "No turn (or up to ¼ to R)",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF, part weight",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF fwd",
+    "d": "fwd",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF, part weight",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Reverse Basic Movement",
+   "Whisks to Right and Left"
+  ],
+  "fol": [
+   "Whisks to Right and Left",
+   "Reverse Basic Movement",
+   "Progressive Basic Movement"
+  ],
+  "tip": "Danced with the Samba bounce: a slight knee flex on each beat."
+ },
+ "samba.whisks-to-right-and-left": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 a 2",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF crosses behind RF, toe turned out",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF crosses behind LF, toe turned out",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF crosses behind LF, toe turned out",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF crosses behind RF, toe turned out",
+    "d": "xbehind",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Natural Basic Movement"
+  ],
+  "fol": [
+   "Samba Walks in PP",
+   "Volta Spot Turn",
+   "Natural Basic Movement"
+  ],
+  "tip": "The crossing foot is placed behind on the ball with the toe turned out."
+ },
+ "jive.fallaway-rock": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 2 3a4 3a4",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF back in Fallaway (small step)",
+    "d": "backsmall",
+    "t": 0,
+    "tt": "Up to ⅛ to L may be made",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back in Fallaway (small step)",
+    "d": "backsmall",
+    "t": 0,
+    "tt": "Up to ⅛ to R may be made",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF half closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "RF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF half closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "LF to side",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Basic in Place",
+   "Link",
+   "Change of Places Left to Right"
+  ],
+  "fol": [
+   "Fallaway Throwaway",
+   "Change of Places Right to Left",
+   "American Spin"
+  ],
+  "tip": "Rock back on 1 with a compact step; chassés are danced with a lilting, springy action."
+ },
+ "jive.basic-in-place": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 2 3a4 3a4",
+  "man": [
+   {
+    "f": "L",
+    "p": "LF back (small step)",
+    "d": "backsmall",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "Replace weight to RF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "R",
+    "p": "RF back (small step)",
+    "d": "backsmall",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "Replace weight to LF",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 0.75
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "a",
+    "b": 0.25
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "BF",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Fallaway Rock",
+   "Link"
+  ],
+  "fol": [
+   "Fallaway Rock",
+   "Change of Places Right to Left"
+  ],
+  "tip": "Chassés in place, knees soft, feet never leaving the floor far."
+ },
+ "paso.sur-place": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 2 3 4 5 6 7 8",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "No turn (may turn either way)",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "5",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "6",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "7",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "8",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "No turn (may turn either way)",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "5",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "6",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "7",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF in place",
+    "d": "place",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "8",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Chassés to Right and Left",
+   "Basic Movement"
+  ],
+  "fol": [
+   "Chassés to Right and Left",
+   "Basic Movement",
+   "Déplacement (Attack)"
+  ],
+  "tip": "Marching on the spot on the balls of the feet, with a strong, lifted poise."
+ },
+ "paso.chasses-to-right-and-left": {
+  "start": {
+   "man": "Facing partner",
+   "lady": "Facing partner"
+  },
+  "timing": "1 2 3 4",
+  "man": [
+   {
+    "f": "R",
+    "p": "RF to side (small step)",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF to side (small step)",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF closes to RF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "lady": [
+   {
+    "f": "L",
+    "p": "LF to side (small step)",
+    "d": "side",
+    "t": 0,
+    "tt": "No turn",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "1",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "2",
+    "b": 1
+   },
+   {
+    "f": "L",
+    "p": "LF to side (small step)",
+    "d": "side",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "3",
+    "b": 1
+   },
+   {
+    "f": "R",
+    "p": "RF closes to LF",
+    "d": "close",
+    "t": 0,
+    "tt": "",
+    "fw": "B",
+    "rf": "",
+    "cbm": false,
+    "sw": "",
+    "c": "4",
+    "b": 1
+   }
+  ],
+  "pre": [
+   "Sur Place"
+  ],
+  "fol": [
+   "Sur Place",
+   "Promenade Link",
+   "Déplacement (Attack)"
+  ],
+  "tip": "Shown as Chassés to Right for the Man (to Left for the Lady). Elevated, compact chassés."
+ }
+}
