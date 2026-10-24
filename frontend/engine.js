@@ -86,10 +86,19 @@ export function simulate(steps, startHeading = 0, origin = null, latin = false, 
     const rr = rad(h), fw = { x: Math.sin(rr), y: -Math.cos(rr) };
     const ahead = (q) => (q.x - pos[S].x) * fw.x + (q.y - pos[S].y) * fw.y;
     const passes = ahead(from) * ahead({ x: tx, y: ty }) < 0 && Math.abs(ahead(from)) > TRACK * 0.6 && Math.abs(ahead({ x: tx, y: ty })) > TRACK * 0.6;
-    const via = s.d !== "place" && passes
-      ? { x: pos[S].x + Math.cos(rr) * sg * TRACK * 0.9, y: pos[S].y + Math.sin(rr) * sg * TRACK * 0.9 } : null;
+    // On a big turn (¼ or more) the moving foot comes round the outside of the standing foot with the body,
+    // e.g. step 5 of a Natural Turn, instead of cutting past it: its path runs through a point just outside the
+    // standing foot, on the moving foot's side of the body as it is halfway through the turn.
+    const turn = +s.t || 0;
+    let round = null;
+    if (Math.abs(turn) >= 90 && !["place", "close", "tap"].includes(s.d)) {
+      const mh = rad(prevH + turn / 2), out = { x: Math.cos(mh) * sg, y: Math.sin(mh) * sg };
+      round = { x: pos[S].x + out.x * TRACK * 1.5, y: pos[S].y + out.y * TRACK * 1.5 };
+    }
+    const via = round || (s.d !== "place" && passes
+      ? { x: pos[S].x + Math.cos(rr) * sg * TRACK * 0.9, y: pos[S].y + Math.sin(rr) * sg * TRACK * 0.9 } : null);
     pos[M] = { x: tx, y: ty, h };
-    prints.push({ foot: M, x: tx, y: ty, h, i, w: s.d !== "tap", fw: s.fw || "", from, via, t: +s.t || 0, bodyFrom: prevH });
+    prints.push({ foot: M, x: tx, y: ty, h, i, w: s.d !== "tap", fw: s.fw || "", from, via, through: !!round, t: turn, bodyFrom: prevH });
   });
   return { prints };
 }
@@ -99,8 +108,8 @@ export const FORE = "M-0.8,-18.5 C4.6,-18.6 7.4,-13.6 7,-8 C6.7,-3.8 5.2,-0.6 4.
 export const HEEL = "M-3.6,6.4 L4.2,6.4 C4.8,9.8 4.6,14.4 2.8,16.9 C1.4,18.6 -1.6,18.6 -3.1,16.9 C-4.8,14.4 -4.5,9.8 -3.6,6.4 Z";
 
 const lerp = (a, b, t) => a + (b - a) * t;
-// quadratic curve bending towards the standing foot
-const ctrl = (p) => p.via;
+// quadratic curve: bends towards the standing foot when brushing past it, passes through the outside point on turns
+const ctrl = (p) => (p.through ? { x: 2 * p.via.x - (p.from.x + p.x) / 2, y: 2 * p.via.y - (p.from.y + p.y) / 2 } : p.via);
 function along(p, u) {
   if (!p.via) return { x: lerp(p.from.x, p.x, u), y: lerp(p.from.y, p.y, u) };
   const c = ctrl(p), a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, d = u * u;
