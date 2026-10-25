@@ -21,8 +21,12 @@ ssh -p 984 root@chza.me /opt/dance/deploy/pull.sh
 ```
 
 `pull.sh` refuses to run unless `/opt/dance` is on `main` with no local changes, fast-forwards to `origin/main`,
-backs up the database to `data/backups/`, and rebuilds the container. The VPS pulls with its own deploy key
-(`/root/.ssh/id_ed25519`, added under the repo's Settings → Deploy keys).
+backs up the database to `data/backups/`, and rebuilds the container. The VPS talks to GitHub with its own key
+(`/root/.ssh/id_ed25519`). Until this branch is merged, `main` doesn't have `pull.sh` yet; the same by hand:
+
+```bash
+ssh -p 984 root@chza.me 'cd /opt/dance && git pull --ff-only origin main && docker compose up -d --build'
+```
 
 **From your laptop** (the old way, still works): `./deploy/deploy.sh` pushes `HEAD` straight to the VPS checkout and
 rebuilds. Push the same commit to GitHub too, so the two don't drift apart; if they do, `pull.sh` stops at the
