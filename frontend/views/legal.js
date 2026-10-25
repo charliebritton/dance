@@ -10,9 +10,9 @@ const TERMS = `
 <p>Rise &amp; Fall is a free, independent study aid for ballroom and Latin dancers, run by Charlie Britton. It is not
 affiliated with or endorsed by SUBLDS, the ISTD, the BDC or any society, school or competition.</p>
 <h2>Step charts and drafts</h2>
-<p>The starter charts were written from memory and are marked “Not checked yet” until the committee checks them
-against the technique books. Animations, floor plans and anything drafted with Claude can be wrong. Check with your
-teacher, and dance within your ability. We aren't responsible for injury or for results at competitions.</p>
+<p>The starter charts were written from memory and are marked “Not checked yet” until the committee or admin checks
+them against the technique books. Animations, floor plans and anything drafted with Claude can be wrong. Treat the site
+as a study aid alongside your lessons, not a replacement for them, and dance within your ability. We aren't responsible for injury or for results at competitions.</p>
 <h2>Accounts</h2>
 <p>Membership is by invitation. Keep your passkey or password to yourself, and tell the admin if you think someone
 else has used your account. The admin can change roles, remove content or close accounts, for example for misuse.</p>
@@ -46,7 +46,7 @@ consent.</li>
 <li><b>What you add</b>: routines and their versions, partner sign-offs, comments, private notes, demo videos, lesson
 recordings, their transcripts and notes, and competition plans.</li>
 <li><b>Lesson recordings</b>: transcribed on our own server (nothing is sent elsewhere). The audio is deleted once it's
-transcribed unless you choose to keep it. Only you and the committee can see a recording and its transcript.</li>
+transcribed unless you choose to keep it. Only you and the committee or admin can see a recording and its transcript.</li>
 <li><b>Claude</b>: when the admin uses Claude (Anthropic's AI) to draft a routine, chart or lesson notes, the text
 needed for that draft (for example a routine brief or a transcript) is sent to Anthropic to process. We log how many
 tokens each draft used, so we can see the cost.</li>
@@ -55,7 +55,7 @@ rotate automatically and are deleted after a few months.</li>
 </ul>
 <h2>Who sees it</h2>
 <p>Names are visible to other members. Routines are visible to their owner and dancers; private notes only to you.
-Lesson content is visible to members and the committee. We don't sell or share data with anyone else, apart from
+Lesson content is visible to members, and the committee or admin manages it. We don't sell or share data with anyone else, apart from
 Anthropic as described above and the hosting provider that runs the server.</p>
 <h2>Why we can use it</h2>
 <p>To run the service you joined (contract and legitimate interests), and with your choice when you upload a

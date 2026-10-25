@@ -88,3 +88,13 @@ When a feature starts storing or sending something new, update them (and the dat
   `Permissions-Policy`.
 - The app shares the chza.me origin with the other apps on that domain, so a script injection bug in any of them could
   act on this one. Keep that in mind, or give it its own subdomain.
+
+## Contributors
+
+Everyone who has committed to this repo, plus anyone credited with a `Co-authored-by:` line. Updated automatically on
+every push to `main` (`.github/workflows/contributors.yml`); to add yourself, commit.
+
+<!-- contributors:start -->
+- Charlie Britton (8 commits)
+- Claude Opus 5.5 (8 commits)
+<!-- contributors:end -->

@@ -294,7 +294,7 @@ def clear_chat(routine_id: str, u: dict = Member):
     return {"ok": True}
 
 
-# --- charts (committee edits; Claude drafts are admin only) ---------------------
+# --- charts (committee or admin edits; Claude drafts are admin only) ------------
 
 class ChartIn(BaseModel):
     timing: str = ""
@@ -345,15 +345,15 @@ def draft_chart(fig_id: str, u: dict = Member):
 # --- videos --------------------------------------------------------------------
 
 def _check_video_ref(con, ref: str, u: dict):
-    """Figure demos and lesson videos are added by the committee; routine videos by that routine's dancers."""
+    """Figure demos and lesson videos are added by the committee or admin; routine videos by that routine's dancers."""
     kind, _, key = ref.partition(":")
     if kind == "fig" and syllabus.figure(key):
         if not auth.is_committee(u):
-            raise HTTPException(403, "Demo videos on figures are added by the committee")
+            raise HTTPException(403, "Demo videos on figures are added by the committee or admin")
         return
     if kind == "lesson" and con.execute("SELECT 1 FROM lessons WHERE id=?", (key,)).fetchone():
         if not auth.is_committee(u):
-            raise HTTPException(403, "Lesson videos are added by the committee")
+            raise HTTPException(403, "Lesson videos are added by the committee or admin")
         return
     if kind == "routine":
         load_routine(con, key, u, edit=True)

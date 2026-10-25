@@ -30,7 +30,7 @@ def folder():
 
 
 def current(con) -> dict:
-    """The chart each figure is danced from: the committee's edit if there is one, else the starter chart."""
+    """The chart each figure is danced from: the committee's or admin's edit if there is one, else the starter chart."""
     return syllabus.STARTER | charts(con)
 
 

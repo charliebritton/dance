@@ -1,4 +1,4 @@
-// Lessons: what each group covered. The committee records the figures, the routine danced, videos and comments.
+// Lessons: what each group covered. The committee or admin records the figures, the routine danced, videos and comments.
 import {
   $, BASE, S, api, attempt, canUseAI, chartBeats, chartFor, confirmTap, danceOf, esc, fmtDate, fmtDay, groupName, hooks,
   isAdmin, isCommittee, ls, refresh, setAccent, slug, toast, today, uploadVideo, userName, videoBlock, figTag,
@@ -219,7 +219,7 @@ function recsBlock(l) {
   const busyElsewhere = R.rec.state === "recording" && !live;
   return `<div class="panel pad recbox">
     <p class="small"><b>Before you record:</b> a recording picks up everyone nearby, so ask the teacher and the class first.
-      Only you and the committee can read the transcript. The audio is deleted once it's transcribed unless you keep it, and you can delete everything at any time.</p>
+      Only you and the committee or admin can read the transcript. The audio is deleted once it's transcribed unless you keep it, and you can delete everything at any time.</p>
     ${live ? `<div class="row recnow"><span class="recdot" aria-hidden="true"></span><b class="mono" data-rectime>${R.clock(Date.now() - R.rec.started)}</b>
         <span class="small muted">${R.rec.locked ? "Keeping the screen on" : "Keep the screen on"}${R.rec.gaps ? ` · the microphone was interrupted ${R.rec.gaps}×` : ""}</span>
         <button class="btn solid" data-ract="stop">Stop and send</button></div>

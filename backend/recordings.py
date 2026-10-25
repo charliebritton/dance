@@ -2,7 +2,7 @@
 (transcribe.py) and the transcript becomes notes for that lesson.
 
 Privacy: a recording can pick up other people, so its transcript is seen only by the person who added it and the
-committee, either of whom can delete it. The audio is deleted once transcribed unless its owner ticks "keep audio".
+committee or admin, any of whom can delete it. The audio is deleted once transcribed unless its owner ticks "keep audio".
 
 Notes, cheapest first: rough notes picked out of the transcript here (free), a ready-made prompt to paste into your own
 Claude (free to the site), or the admin's "Draft notes with Claude" through ai.py (logged and costed like other calls).
@@ -51,7 +51,7 @@ def _lesson(con, lid: str) -> dict:
 
 @router.get("/api/lessons/{lid}/recordings")
 def lesson_recordings(lid: str, u: dict = Member):
-    """Your recordings of this lesson; the committee sees everyone's."""
+    """Your recordings of this lesson; the committee or admin sees everyone's."""
     with db.tx() as con:
         dance = (con.execute("SELECT dance FROM lessons WHERE id = ?", (lid,)).fetchone() or {"dance": ""})["dance"]
         rows = con.execute("SELECT * FROM lesson_recordings WHERE lesson_id = ? AND (user_id = ? OR ?) ORDER BY created_at",
@@ -160,7 +160,7 @@ def delete_files(rows):
 
 @router.delete("/api/recordings/{rec_id}")
 def delete_recording(rec_id: str, u: dict = Member):
-    """Its owner or the committee can delete a recording: the audio, the transcript and its notes."""
+    """Its owner, the committee or the admin can delete a recording: the audio, the transcript and its notes."""
     with db.tx() as con:
         r = _load(con, rec_id, u)
         con.execute("DELETE FROM lesson_recordings WHERE id = ?", (rec_id,))

@@ -76,7 +76,7 @@ function figList() {
 
 function srcBadge(c) {
   if (c.src === "edited") return `<span class="badge ed">Edited by ${esc(userName(c.updated_by))}</span>`;
-  return `<span class="badge st" title="Not yet checked against the technique book. The committee can correct the steps with Edit steps, then mark it as checked.">Not checked yet</span>`;
+  return `<span class="badge st" title="Not yet checked against the technique book. The committee or admin can correct the steps with Edit steps, then mark it as checked.">Not checked yet</span>`;
 }
 function pfChips(danceId, list) {
   if (!list?.length) return `<span class="muted">—</span>`;
@@ -175,7 +175,7 @@ function commentsBlock(figId) {
   if (!list) { loadComments(figId); return `<p class="small muted">Loading…</p>`; }
   return `<div class="comments">${list.map((c) => `<div class="comment"><div class="small"><b>${esc(userName(c.user_id))}</b> <span class="muted">${fmtDate(c.created_at)}</span>
     ${c.user_id === S.me.id || isCommittee() ? `<button class="linkish small" data-cdel="${c.id}">Remove</button>` : ""}</div><p class="prewrap">${glossed(c.text)}</p></div>`).join("") || `<p class="small muted">No comments yet.</p>`}
-    <form id="figComment" class="stack"><textarea class="input" name="text" required placeholder="A tip, a correction, a question for the teacher"></textarea><button class="btn" type="submit">Post comment</button></form></div>`;
+    <form id="figComment" class="stack"><textarea class="input" name="text" required placeholder="A tip, a correction, a question for the others"></textarea><button class="btn" type="submit">Post comment</button></form></div>`;
 }
 
 async function loadComments(figId) {

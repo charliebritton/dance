@@ -14,7 +14,7 @@ never use the society's name or branding.
   `manage.py` CLI (`invite --admin`, `seed-competitions`). `syllabus.json` ISTD lists per level plus each dance's
   `bdc` list (BDC Rules appendices 1–2, the restricted syllabus for beginner/novice comps); a figure is one id per
   dance+name, so a figure in both shares its chart. `charts.json` starter charts (written from memory, to be checked
-  against the books; every chart shows "Not checked yet" until the committee marks it checked);
+  against the books; every chart shows "Not checked yet" until the committee or admin marks it checked; teachers don't use the app);
   `competitions_seed.json` 2026/27 circuit. `recordings.py` lesson recordings (upload, privacy, free rough notes, the
   copy-for-Claude prompt, admin "Draft with Claude"); `transcribe.py` the local Whisper queue (see Recordings).
 - `frontend/engine.js` footprint engine (simulate, draw, animate); `dancers3d.js` low-poly 3D dancers driven by the
@@ -31,8 +31,9 @@ never use the society's name or branding.
   it for steps travelling in PP. "Steps a–b only" in a routine item's notes cuts the figure everywhere.
 - All frontend URLs go through `BASE` (the server fills `<html data-base>` from `BASE_PATH`).
 - Access: visitors see the syllabus and charts only; names, videos, routines, lessons and competitions need sign-in.
-  Members own their routines (owner + lead/follow dancers), comments and private notes; committee runs lessons,
-  competitions, chart edits and the "checked" mark; admin manages invites/roles/groups and is the only Claude user
+  Members own their routines (owner + lead/follow dancers), comments and private notes; committee or admin runs
+  lessons, competitions, chart edits and the "checked" mark (both roles can, neither has to; teachers aren't users,
+  so copy never asks a teacher to check anything); admin manages invites/roles/groups and is the only Claude user
   (`AI_ACCESS=admin`; `all` + `AI_DAILY_LIMIT` later). Everyone else uses "Request a draft" (admin queue).
 - Routines have a `syllabus` (`istd` with level Bronze/Silver/Gold, or `bdc` with the single level `Restricted`).
 - People the admin adds ahead of time are users with no passkey or password ("not joined yet"); a personal invite
@@ -50,7 +51,7 @@ never use the society's name or branding.
 
 ## Recordings
 - A member uploads a lesson recording (watch/phone voice memo: m4a, mp3, wav, webm, ogg…) or records on the lesson page.
-  Only they and the committee see it; either can delete it. Audio is deleted after transcription unless "keep audio";
+  Only they and the committee or admin see it; any of them can delete it. Audio is deleted after transcription unless "keep audio";
   failed jobs keep it for "Try again". Removing a lesson or a person removes their recordings.
 - Transcription is local and free: faster-whisper, model `WHISPER_MODEL` (default `base`, int8, greedy, VAD, the
   lesson's figure names as hotwords), downloaded into `data/models` on first use. One job at a time: a worker thread
@@ -64,7 +65,7 @@ never use the society's name or branding.
 - Notes, free first: "Rough notes" (word lists + syllabus figure matching in `recordings.py`), "Copy transcript for
   Claude" (the same brief as `ai.NOTES_SYSTEM`, pasted into the person's own Claude), and admin-only "Draft with Claude"
   (`check_ai`, logged as `lesson-notes:<id>`). Notes save on the recording; the owner can post them as a comment, the
-  committee can add them to the summary and tick off the figures heard.
+  committee or admin can add them to the summary and tick off the figures heard.
 - Screen off: iPhone Safari stops the microphone when the screen locks or the app changes, so the page holds a wake
   lock; Android Chrome usually carries on. The voice-memo app on a watch or phone is the reliable pocket option.
 

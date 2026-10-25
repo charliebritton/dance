@@ -27,7 +27,7 @@ export function renderLogin(el) {
   const pk = passkeysSupported();
   el.innerHTML = `<section class="authcard panel pad">
     <h1 class="display">Sign in</h1>
-    <p class="muted">Members see lessons, videos, competitions and their own routines. New here? Ask a committee member for the society's join link.</p>
+    <p class="muted">Members see lessons, videos, competitions and their own routines. New here? Ask the admin for a join link.</p>
     ${pk ? `<button class="btn solid big" id="pkLogin">Sign in with a passkey</button>` : `<p class="small muted">This browser can't use passkeys, so sign in with your password.</p>`}
     <details ${pk ? "" : "open"}><summary>Use a password instead</summary>
       <form id="pwLogin" class="stack">

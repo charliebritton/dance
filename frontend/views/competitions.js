@@ -27,7 +27,7 @@ function card(c) {
       <div class="row">
         <span class="travel ${cls}">${travel}</span>
         ${c.team_entry ? `<span class="chip">Team entry</span>` : ""}
-        ${!c.confirmed ? `<span class="badge ai" title="${esc(c.source || "Found online; not yet checked by the committee")}">Unconfirmed</span>` : ""}
+        ${!c.confirmed ? `<span class="badge ai" title="${esc(c.source || "Found online; not yet checked by the committee or admin")}">Unconfirmed</span>` : ""}
       </div>
       ${c.notes ? `<p class="prewrap small">${esc(c.notes)}</p>` : ""}
       <div class="row">

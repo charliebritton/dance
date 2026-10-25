@@ -1,0 +1,25 @@
+# Keeps the Contributors list in README.md up to date: after every push to main, rebuild it from git history
+# (authors and Co-authored-by lines) and commit the change if there is one.
+name: Contributors
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: contributors
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 .github/contributors.py
+      - name: Commit if changed
+        run: |
+          git diff --quiet README.md && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Update contributors [skip ci]"
+          git push

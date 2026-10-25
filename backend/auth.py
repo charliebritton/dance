@@ -90,7 +90,7 @@ def member(request: Request) -> dict:
 def committee(request: Request) -> dict:
     u = member(request)
     if u["role"] not in ("committee", "admin"):
-        raise HTTPException(403, "Only the committee can change this")
+        raise HTTPException(403, "Only the committee or admin can change this")
     return u
 
 

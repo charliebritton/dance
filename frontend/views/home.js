@@ -29,7 +29,7 @@ function visitor() {
   </section>
   <div class="sec-title"><span>Find a figure</span></div>
   ${tiles()}
-  <p class="small muted joinhint">Dance with the society? Ask a committee member for the join link to make an account.</p>`;
+  <p class="small muted joinhint">Dance with the society? Ask the admin for a join link to make an account.</p>`;
 }
 
 function member() {
