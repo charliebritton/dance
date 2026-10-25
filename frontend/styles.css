@@ -68,6 +68,11 @@ p { margin: 0; }
 .top .wrap { display: flex; align-items: center; gap: 18px; min-height: 62px; flex-wrap: wrap; padding-block: 6px; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 23px/1 var(--f-display); letter-spacing: .04em; white-space: nowrap; }
 .logo svg { width: 30px; height: 30px; flex: none; color: var(--accent); }
+/* not production (ENV_LABEL, e.g. the dev copy): an amber-striped bar and a tag by the name */
+.envtag { display: none; }
+html:not([data-env=""]) .envtag { display: inline-block; font: 700 11px/1 var(--f-body, system-ui); letter-spacing: .12em; text-transform: uppercase;
+  background: #F2B33D; color: #241A00; padding: 4px 7px; border-radius: 3px; }
+html:not([data-env=""]) .top { background: repeating-linear-gradient(135deg, var(--bar) 0 18px, color-mix(in srgb, #F2B33D 30%, var(--bar)) 18px 36px); }
 .tabs { display: flex; gap: 2px; margin-right: auto; }
 .tab { text-decoration: none; padding: 8px 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; opacity: .72; border-bottom: 3px solid transparent; }
 .tab[aria-current="page"] { opacity: 1; border-color: var(--accent); }
@@ -175,6 +180,13 @@ textarea.input { resize: vertical; min-height: 72px; line-height: 1.45; }
 }
 .stage { position: relative; background: var(--surface); border: 1.5px solid var(--ink); border-radius: var(--r); aspect-ratio: 1; overflow: hidden; }
 .stage.big { aspect-ratio: 5 / 4; }
+.stagebar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.stagebar .seg { margin-right: auto; }
+.stage .dia3host { position: absolute; inset: 6px 0 0; }
+.stage .dia3host canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage.s3d .counts { z-index: 1; top: 14px; }
+.stage.s3d .counts span { background: color-mix(in srgb, var(--surface) 80%, transparent); padding: 1px 3px; border-radius: 2px; }
+.stage.s3d .beat { z-index: 1; text-shadow: 0 1px 0 var(--surface); }
 .stage::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--accent); }
 .stage svg.dia { position: absolute; inset: 40px 8px 44px; width: calc(100% - 16px); height: calc(100% - 84px); }
 .stage .counts { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: 13px; color: var(--muted); letter-spacing: .06em; }
@@ -304,6 +316,9 @@ section.ai .btn.ghost { background: none; border-color: transparent; }
 /* ── practice ───────────────────────────────── */
 .pbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 22px; }
 .pbar .field { min-width: 220px; }
+.pbar.small { margin-top: -12px; font-size: 13px; }
+.pbar .field.narrow { min-width: 110px; max-width: 130px; }
+#pSvg, #pFloor { transition: transform .2s linear; transform-origin: 50% 50%; }
 .psplit { display: grid; grid-template-columns: minmax(280px, 560px) minmax(0, 1fr); gap: 28px; align-items: start; }
 .now { display: grid; gap: 4px; margin-bottom: 12px; }
 .now h1 { font-size: clamp(28px, 3.6vw, 40px); line-height: 1.05; }
@@ -486,3 +501,20 @@ table.plain td { padding: 8px; border-bottom: 1px solid var(--line); vertical-al
   .item.lesson { grid-template-columns: 28px minmax(0, 1fr) auto; grid-template-areas: "n f a" "n o o"; }
   .ccard { gap: 12px; }
 }
+
+/* lesson recordings */
+#recs { display: grid; gap: 12px; }
+.recbox, .reccard { display: grid; gap: 10px; }
+.recnow { gap: 12px; }
+.recdot { width: 12px; height: 12px; border-radius: 50%; background: var(--bad); animation: recpulse 1.4s ease-in-out infinite; }
+@keyframes recpulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .recdot { animation: none; } }
+.rectips p { margin-top: 6px; }
+.rectips summary { cursor: pointer; }
+.leftover { padding: 8px 10px; background: var(--sunk); border-radius: var(--r); }
+.bar { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); transition: width .4s; }
+pre.transcript { white-space: pre-wrap; font: 13px/1.5 var(--f-ui); max-height: 360px; overflow: auto; margin-top: 6px; padding: 10px; background: var(--sunk); border-radius: var(--r); }
+.reccard audio { max-width: 100%; height: 36px; }
+.reccard .btn { white-space: normal; text-align: left; }
+.small.bad { color: var(--bad); }

@@ -5,7 +5,7 @@
 import { parseAlign, simulate } from "./engine.js";
 import { S, chartFor, ls, sliceChart, stepRange } from "./core.js";
 
-export const UNITS_PER_M = 120;            // one Standard stride (78 units) ≈ 0.65 m
+export const UNITS_PER_M = 150;            // one Standard stride (78 units) ≈ 0.52 m, a real walking step
 export const ROOMS = {
   small: { label: "Small hall · 12 × 8 m", w: 12, h: 8 },
   medium: { label: "Studio · 16 × 10 m", w: 16, h: 10 },
@@ -51,7 +51,7 @@ export function planRoutine(segs, room, latin) {
     const pts = [{ ...centre, h: h0, k: -1 }];
     for (const p of sim.prints.slice(2)) {
       feet[p.foot] = p;
-      pts.push({ x: (feet.L.x + feet.R.x) / 2, y: (feet.L.y + feet.R.y) / 2, h: p.h, k: p.i });
+      pts.push({ x: (feet.L.x + feet.R.x) / 2, y: (feet.L.y + feet.R.y) / 2, h: p.body ?? p.h, k: p.i });
     }
     // does this figure start the way the last one finished? (skipped for Latin, which isn't danced round the room)
     const jump = !latin && prevEnd != null ? diff(h0, prevEnd) : 0;

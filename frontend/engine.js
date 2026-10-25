@@ -97,10 +97,20 @@ export function simulate(steps, startHeading = 0, origin = null, latin = false, 
     }
     const via = round || (s.d !== "place" && passes
       ? { x: pos[S].x + Math.cos(rr) * sg * TRACK * 0.9, y: pos[S].y + Math.sin(rr) * sg * TRACK * 0.9 } : null);
-    pos[M] = { x: tx, y: ty, h };
-    prints.push({ foot: M, x: tx, y: ty, h, i, w: s.d !== "tap", fw: s.fw || "", from, via, through: !!round, t: turn, bodyFrom: prevH });
+    // a foot crossing in front or behind (locks, Cuban crosses) lands turned out, toe away from the other foot
+    const fh = s.d === "xbehind" || s.d === "xfront" ? h + sg * 22 : h;
+    pos[M] = { x: tx, y: ty, h: fh };
+    prints.push({ foot: M, x: tx, y: ty, h: fh, body: h, i, w: s.d !== "tap", fw: s.fw || "", from, via, through: !!round, t: turn, bodyFrom: prevH });
   });
   return { prints };
+}
+
+/** A copy of a simulation turned by rot° about pivot and then moved by (dx, dy): figures laid end to end. */
+export function placeSim(sim, dx, dy, rot = 0, pivot = { x: 0, y: 0 }) {
+  const r = rad(rot), c = Math.cos(r), sn = Math.sin(r);
+  const pt = (q) => q && { ...q, x: pivot.x + (q.x - pivot.x) * c - (q.y - pivot.y) * sn + dx, y: pivot.y + (q.x - pivot.x) * sn + (q.y - pivot.y) * c + dy };
+  return { prints: sim.prints.map((p) => ({ ...pt(p), h: p.h + rot, body: p.body != null ? p.body + rot : undefined, bodyFrom: p.bodyFrom != null ? p.bodyFrom + rot : undefined,
+    from: p.from && { ...pt(p.from), h: p.from.h + rot }, via: pt(p.via) })) };
 }
 
 // Shoe-sole outline (right foot, toe up). Left foot is mirrored.
@@ -110,7 +120,7 @@ export const HEEL = "M-3.6,6.4 L4.2,6.4 C4.8,9.8 4.6,14.4 2.8,16.9 C1.4,18.6 -1.
 const lerp = (a, b, t) => a + (b - a) * t;
 // quadratic curve: bends towards the standing foot when brushing past it, passes through the outside point on turns
 const ctrl = (p) => (p.through ? { x: 2 * p.via.x - (p.from.x + p.x) / 2, y: 2 * p.via.y - (p.from.y + p.y) / 2 } : p.via);
-function along(p, u) {
+export function along(p, u) {
   if (!p.via) return { x: lerp(p.from.x, p.x, u), y: lerp(p.from.y, p.y, u) };
   const c = ctrl(p), a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, d = u * u;
   return { x: a * p.from.x + b * c.x + d * p.x, y: a * p.from.y + b * c.y + d * p.y };

@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 import ai
 import auth
 import db
+import recordings
 import syllabus
 from common import charts, clean_items, fig_or_404, load_routine, match_proposal, rid
 
@@ -142,6 +143,7 @@ def update_lesson(lid: str, body: LessonIn, u: dict = Committee):
 @router.delete("/api/lessons/{lid}")
 def delete_lesson(lid: str, u: dict = Committee):
     with db.tx() as con:
+        recordings.delete_files(con.execute("SELECT file FROM lesson_recordings WHERE lesson_id = ?", (lid,)).fetchall())
         con.execute("DELETE FROM lessons WHERE id = ?", (lid,))
         con.execute("DELETE FROM videos WHERE ref = ?", ("lesson:" + lid,))
     return {"ok": True}

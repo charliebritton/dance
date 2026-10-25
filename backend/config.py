@@ -19,6 +19,8 @@ class Settings(BaseSettings):
 
     session_secret: str = "changeme-too"
     secure_cookies: bool = False      # True behind HTTPS in production
+    # Shown in the header and striping the bar, e.g. "dev" for https://chza.me/dance-dev/. Empty in production.
+    env_label: str = ""
     base_path: str = ""               # e.g. "/dance" when served at chza.me/dance (the proxy strips it)
 
     # Passkeys: the relying-party id is the bare domain, the origin is scheme + host (+ port) of the site.
@@ -29,6 +31,16 @@ class Settings(BaseSettings):
     db_path: Path = ROOT / "data" / "dance.db"
     upload_dir: Path = ROOT / "data" / "uploads"
     max_upload_mb: int = 500
+    # Shared secret for the render worker (render/worker.mjs) that uploads each figure's 3D video.
+    render_token: str = ""
+
+    # Lesson recordings, transcribed on this server with faster-whisper (see transcribe.py). No paid API.
+    whisper_model: str = "base"       # tiny | base | small; downloaded into model_dir on first use
+    whisper_threads: int = 1          # keep at 1: the VPS has one CPU shared with live sites
+    model_dir: Path = ROOT / "data" / "models"
+    max_audio_mb: int = 300
+    max_audio_minutes: int = 120
+    transcribe_worker: bool = True    # the tests switch the background worker off and run jobs themselves
 
 
 settings = Settings()

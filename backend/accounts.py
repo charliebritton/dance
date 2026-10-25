@@ -13,6 +13,7 @@ from webauthn.helpers.structs import (AuthenticatorSelectionCriteria, PublicKeyC
 
 import auth
 import db
+import recordings
 from config import settings
 
 router = APIRouter()
@@ -490,6 +491,7 @@ def delete_user(con, uid: int):
         con.execute(f"UPDATE routines SET {col} = NULL WHERE {col} = ?", (uid,))
     con.execute("DELETE FROM approvals WHERE user_id = ?", (uid,))
     con.execute("UPDATE invites SET revoked = 1 WHERE user_id = ?", (uid,))
+    recordings.delete_files(con.execute("SELECT file FROM lesson_recordings WHERE user_id = ?", (uid,)).fetchall())
     con.execute("DELETE FROM users WHERE id = ?", (uid,))
 
 

@@ -177,6 +177,28 @@ CREATE TABLE IF NOT EXISTS lesson_comments (
 );
 CREATE INDEX IF NOT EXISTS lesson_comments_lesson ON lesson_comments(lesson_id, id);
 
+-- a member's recording of a lesson (uploaded or recorded in the browser), transcribed on this server.
+-- Seen only by the person who added it and the committee. file is NULL once the audio has been deleted.
+CREATE TABLE IF NOT EXISTS lesson_recordings (
+  id           TEXT PRIMARY KEY,
+  lesson_id    TEXT NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+  user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  file         TEXT,                            -- in upload_dir/recordings
+  mime         TEXT NOT NULL DEFAULT '',
+  size         INTEGER NOT NULL DEFAULT 0,
+  keep_audio   INTEGER NOT NULL DEFAULT 0,
+  status       TEXT NOT NULL DEFAULT 'queued',  -- 'queued' | 'running' | 'done' | 'failed'
+  progress     REAL NOT NULL DEFAULT 0,         -- 0–1 through the audio
+  duration     REAL,                            -- seconds
+  error        TEXT NOT NULL DEFAULT '',
+  transcript   TEXT NOT NULL DEFAULT '',        -- one "[m:ss] text" line per segment
+  notes        TEXT NOT NULL DEFAULT '',        -- notes drafted from it, edited by its owner
+  created_at   INTEGER NOT NULL,
+  started_at   INTEGER,
+  finished_at  INTEGER
+);
+CREATE INDEX IF NOT EXISTS lesson_recordings_lesson ON lesson_recordings(lesson_id, created_at);
+
 -- ── competitions ───────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS competitions (
   id              TEXT PRIMARY KEY,
@@ -220,3 +242,16 @@ CREATE TABLE IF NOT EXISTS ai_usage (
   at             INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ai_usage_user ON ai_usage(user_id, at);
+
+-- pre-rendered 3D videos of each figure (renders.py); hash = the chart version, tempo and rig it was filmed from
+CREATE TABLE IF NOT EXISTS renders (
+  fig_id      TEXT PRIMARY KEY,
+  hash        TEXT NOT NULL,
+  file        TEXT NOT NULL,
+  fps         REAL NOT NULL,
+  bpm         REAL NOT NULL,
+  lead        REAL NOT NULL,
+  tail        REAL NOT NULL,
+  size        INTEGER,
+  created_at  INTEGER NOT NULL
+);

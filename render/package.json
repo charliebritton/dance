@@ -1,0 +1,8 @@
+{
+  "name": "rise-and-fall-render",
+  "private": true,
+  "type": "module",
+  "description": "Renders each figure's 3D dancers to MP4 on a machine with a GPU and uploads them to Rise & Fall",
+  "scripts": { "render": "node worker.mjs" },
+  "dependencies": { "playwright": "1.48.2" }
+}

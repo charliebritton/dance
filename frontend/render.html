@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure render</title>
+<!-- Used by render/worker.mjs to film each figure frame by frame; also a quick preview: render.html?fig=chacha.new-york -->
+<script>document.documentElement.dataset.base = location.pathname.replace(/\/static\/render\.html$/, "");</script>
+<link rel="stylesheet" href="styles.css">
+<style>html, body { margin: 0; height: 100%; overflow: hidden; } #stage { position: fixed; inset: 0; }</style>
+</head>
+<body><div id="stage"></div><script type="module" src="render.js"></script></body>
+</html>

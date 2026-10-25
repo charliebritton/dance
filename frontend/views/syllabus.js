@@ -6,10 +6,13 @@ import {
   count, footwork, glossed, head, sway, LEVEL_TIPS, canUseAI, coveredIn, fmtDay, groupName, isAdmin, isCommittee, myGroupLessons,
   figLists,
 } from "../core.js";
+import { roomFor } from "../floor.js";
+import { load3d, mode, onStageChange, onStageClick, s3, stageBar } from "../view3d.js";
 
 const v = { dance: ls.get("dance", "waltz"), fig: null, q: "", step: -1, editing: false, draft: null, ctx: null, drafting: false, comments: {} };
 const player = makePlayer((i, frac) => { v.step = i; paint(i + frac); });
 export const stopSyllabus = () => player.pause();
+
 
 export function render(el, params) {
   if (params.dance && danceOf(params.dance)) { v.dance = params.dance; ls.set("dance", v.dance); }
@@ -112,7 +115,8 @@ function detail() {
   ${c ? `
   <div class="stage-grid">
     <div>
-      <div class="stage"><div class="counts mono" id="counts"></div><svg class="dia" id="dia" role="img" aria-label="Animated footprint diagram for ${esc(f.name)}"></svg><div class="beat display" id="beat"></div></div>
+      ${stageBar()}
+      <div class="stage ${mode() === "3d" ? "s3d" : ""}"><div class="counts mono" id="counts"></div>${mode() === "3d" ? `<div class="dia3host" id="dia3" role="img" aria-label="3D dancers performing ${esc(f.name)}. Drag to look round"></div>` : `<svg class="dia" id="dia" role="img" aria-label="Animated footprint diagram for ${esc(f.name)}"></svg>`}<div class="beat display" id="beat"></div></div>
       <div class="transport">
         <button class="btn sm" data-act="prev" aria-label="Previous step">◀</button>
         <button class="btn sm acc" data-act="play" id="playBtn">▶ Play to the beat</button>
@@ -120,7 +124,7 @@ function detail() {
         <label class="small muted tempo">Speed <select class="input auto sm" id="speed">${[0.5, 0.75, 1].map((x) => `<option value="${x}" ${x === (ls.get("speed", 0.75)) ? "selected" : ""}>${x * 100}%</option>`).join("")}</select></label>
         <button class="btn sm ghost" data-act="all">Show all steps</button>
       </div>
-      <div class="legend small muted"><span><i class="lg-r"></i>right foot</span><span><i class="lg-l"></i>left foot</span><span><i class="lg-n"></i>start, or where the foot is going</span><span><i class="lg-b"></i>shoulders and facing</span>${latin ? "" : "<span>Wall at the bottom, LOD →</span>"}</div>
+      ${mode() === "3d" ? `<div class="legend small muted"><span>Drag to look round, pinch or scroll to zoom, double-tap to reset. Footprints on the floor: leader dark, follower in colour.</span></div>` : `<div class="legend small muted"><span><i class="lg-r"></i>right foot</span><span><i class="lg-l"></i>left foot</span><span><i class="lg-n"></i>start, or where the foot is going</span><span><i class="lg-b"></i>shoulders and facing</span>${latin ? "" : "<span>Wall at the bottom, LOD →</span>"}</div>`}
     </div>
     <div class="facts">
       <dl>
@@ -190,7 +194,7 @@ function tables(f, c, d) {
       : ["", "Foot position", "Alignment", "Amount of turn", hasRf && "Rise & fall", "Footwork", hasCbm && "CBM", hasSw && "Sway", "Timing"].filter((x) => x !== false);
     const rows = steps.map((s, i) => {
       const pr = sim.prints.find((p) => p.i === i);
-      const al = s.al || (pr ? alignName(pr.h, s.d) : "");
+      const al = s.al || (pr ? alignName(pr.body ?? pr.h, s.d) : "");
       const cells = latin ? [glossed(s.p), glossed(s.tt), footwork(s.fw), count(s.c, d), fmtBeats(s.b)]
         : [glossed(s.p), glossed(al) + (s.mv ? `<div class="small muted">moving ${glossed(s.mv)}</div>` : ""), glossed(s.tt), hasRf && glossed(s.rf), footwork(s.fw), hasCbm && (s.cbm ? glossed("CBM") : ""), hasSw && sway(s.sw), `${count(s.c, d)} <span class="small muted">${fmtBeats(s.b)}</span>`].filter((x) => x !== false);
       return `<tr data-step="${i}" tabindex="0"><td class="n mono">${i + 1}</td>${cells.map((x) => `<td>${x}</td>`).join("")}</tr>`;
@@ -226,12 +230,14 @@ function editTables(latin) {
 
 // ── animated stage ────────────────────────────────────────────────────
 function setupStage() {
-  const f = S.figs.get(v.fig), c = chartFor(f.id), svg = $("#dia");
-  if (!c || !svg) { v.ctx = null; return; }
+  const f = S.figs.get(v.fig), c = chartFor(f.id);
+  if (!c || !($("#dia") || $("#dia3"))) { v.ctx = null; return; }
+  if (mode() === "3d" && !s3.stage) { load3d().then(() => hooks.render()); }
   const d = danceOf(f.dance), layers = layersFor(c, d, S.role), steps = layers[0].steps;
   let t = 0;
   const events = steps.map((s) => { const e = { start: t, dur: +s.b || 1 }; t += e.dur; return e; });
-  v.ctx = { f, c, d, layers, steps };
+  v.ctx = { f, c, d, layers, steps, both: layersFor(c, d, "both") };
+  v.lastCallout = null;                       // the page was redrawn, so the callout box is empty again
   const speed = +ls.get("speed", 0.75);
   player.load(events, { bpm: tempoMid(d) * d.bpb * speed, bpb: d.bpb, loop: true });
   if (v.step >= steps.length) v.step = -1;
@@ -239,9 +245,11 @@ function setupStage() {
 }
 
 function paint(pos) {
-  if (!v.ctx || !$("#dia")) return;
+  if (!v.ctx || !($("#dia") || $("#dia3"))) return;
   const { d, layers, steps } = v.ctx;
-  drawFrame($("#dia"), layers, pos, { room: d.style === "Standard" });
+  if ($("#dia3")) {
+    if (s3.stage) { s3.stage.mount($("#dia3")); s3.stage.draw(v.ctx.both, pos, { latin: d.style === "Latin", room: roomFor() }); }
+  } else drawFrame($("#dia"), layers, pos, { room: d.style === "Standard" });
   const k = pos < 0 ? -1 : Math.floor(pos);
   $("#counts").innerHTML = steps.map((x, i) => `<span class="${i === k ? "on" : ""}">${esc(x.c)}</span>`).join(" ");
   $("#beat").textContent = k >= 0 ? `${k + 1}` : "";
@@ -260,7 +268,7 @@ function callout(k) {
   el.innerHTML = layers.map((l) => {
     const x = l.steps[k]; if (!x) return "";
     const pr = l.sim.prints.find((p) => p.i === k);
-    const al = x.al || (d.style === "Standard" && pr ? alignName(pr.h, x.d) : "");
+    const al = x.al || (d.style === "Standard" && pr ? alignName(pr.body ?? pr.h, x.d) : "");
     return `<div class="cstep"><div class="eyebrow">${layers.length > 1 ? esc(l.tag) : esc(roleWord(S.role))} · step ${k + 1} · count ${esc(x.c)}</div>
       <div class="cbig">${glossed(x.p)}</div>
       <div class="small">${[al && glossed(al), x.tt && glossed(x.tt), x.fw && footwork(x.fw), x.rf && glossed(x.rf)].filter(Boolean).join(" · ")}</div></div>`;
@@ -269,6 +277,7 @@ function callout(k) {
 
 // ── events ────────────────────────────────────────────────────────────
 async function onClick(ev) {
+  if (await onStageClick(ev, () => hooks.render())) return;
   const sy = ev.target.closest("[data-syl]");
   if (sy) {
     S.syl = sy.dataset.syl; ls.set("syl", S.syl);
@@ -364,6 +373,8 @@ async function onChange(ev) {
   } else if (t.id === "addToR" && t.value) {
     const r = S.routines.find((x) => x.id === t.value);
     if (await attempt(() => api("PATCH", `/api/routines/${r.id}`, { base_rev: r.rev, items: [...r.items, { type: "fig", fig: f.id }] }), `Added to ${r.name}`)) { await refresh(); hooks.render(); }
+  } else if (onStageChange(t, () => paint(v.step < 0 ? -1 : v.step + 0.999))) {
+    // camera or setting changed
   } else if (t.id === "speed") {
     ls.set("speed", +t.value); const was = player.playing; setupStage(); if (was) player.play(Math.max(0, v.step));
   } else if (t.dataset.upload && t.files?.[0]) {

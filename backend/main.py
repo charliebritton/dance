@@ -17,8 +17,11 @@ import accounts
 import ai
 import auth
 import db
+import recordings
+import renders
 import society
 import syllabus
+import transcribe
 from common import (can_edit_routine, can_see_routine, charts, clean_items, fig_or_404, load_routine, match_proposal, rid,
                     routine_row)
 from config import ROOT, settings
@@ -29,6 +32,7 @@ app = FastAPI(title="Rise & Fall", docs_url=None, redoc_url=None)
 app.add_middleware(GZipMiddleware, minimum_size=2048)   # the syllabus with every chart is ~300 KB of JSON
 db.init()
 settings.upload_dir.mkdir(parents=True, exist_ok=True)
+transcribe.start()
 
 Viewer, Member, Committee = Depends(auth.viewer), Depends(auth.member), Depends(auth.committee)
 
@@ -46,6 +50,8 @@ async def revalidate_frontend(request: Request, call_next):
 
 app.include_router(accounts.router)
 app.include_router(society.router)
+app.include_router(renders.router)
+app.include_router(recordings.router)
 
 
 # --- syllabus + shared state ---------------------------------------------------
@@ -61,7 +67,7 @@ def state(u: dict | None = Viewer):
     with db.tx() as con:
         verified = {r["fig_id"]: {"at": r["verified_at"], **({"by": r["verified_by"]} if u else {})}
                     for r in con.execute("SELECT * FROM figure_status")}
-        out = {"charts": charts(con), "verified": verified}
+        out = {"charts": charts(con), "verified": verified, "renders": renders.public(con)}
         if not u:
             return out
         routines = [r for r in (routine_row(x) for x in con.execute("SELECT * FROM routines ORDER BY updated_at DESC"))
@@ -413,5 +419,6 @@ def spa(path: str):
     f = (FRONTEND / path).resolve()
     if path and f.is_file() and f.parent == FRONTEND.resolve() and f.name != "index.html":
         return FileResponse(f)
-    html = (FRONTEND / "index.html").read_text().replace("__BASE__", settings.base_path.rstrip("/"))
+    html = (FRONTEND / "index.html").read_text().replace("__BASE__", settings.base_path.rstrip("/")) \
+        .replace("__ENV__", settings.env_label)
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})

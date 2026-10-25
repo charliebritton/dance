@@ -22,8 +22,10 @@ def app(tmp_path, monkeypatch):
     monkeypatch.setenv("RP_ID", RP_ID)
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setenv("AI_ACCESS", "admin")
-    import config, db, auth, common, ai, accounts, society, main
-    for m in (config, db, auth, common, ai, accounts, society, main):
+    monkeypatch.setenv("TRANSCRIBE_WORKER", "0")
+    monkeypatch.setenv("RENDER_TOKEN", "render-secret")
+    import config, db, auth, common, ai, transcribe, recordings, accounts, society, renders, main
+    for m in (config, db, auth, common, ai, transcribe, recordings, accounts, society, renders, main):
         importlib.reload(m)
     return main
 
@@ -54,7 +56,7 @@ def test_visitors_see_the_syllabus_but_no_people(app):
     v = TestClient(app.app)
     assert v.get("/api/syllabus").status_code == 200
     st = v.get("/api/state").json()
-    assert set(st) == {"charts", "verified"}
+    assert set(st) == {"charts", "verified", "renders"}
     assert v.get("/api/me").json()["me"] is None
     for path in ("/api/figures/waltz.whisk/comments", "/api/routines/example-bronze-waltz", "/media/x.mp4",
                  "/api/lessons/x/comments", "/api/admin/overview"):

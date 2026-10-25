@@ -230,3 +230,35 @@ def routine_chat(r: dict, charts: dict, history: list[dict], who: int | None = N
     if draft and not (out.get("proposal") or {}).get("items"):
         raise Unavailable("Claude didn't come back with a routine, try again")
     return out
+
+
+# --- Lesson notes from a recording's transcript -------------------------------
+
+NOTES_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "required": ["summary", "figures", "technique", "timing", "homework"],
+    "properties": {
+        "summary": {"type": "string", "description": "One or two sentences on what the lesson covered"},
+        "figures": {"type": "array", "items": {"type": "string"}, "description": "Figures taught or practised, exact names from the list"},
+        "technique": {"type": "array", "items": {"type": "string"}, "description": "Corrections and technique points, one per item"},
+        "timing": {"type": "array", "items": {"type": "string"}, "description": "Counts, timing and musicality points"},
+        "homework": {"type": "array", "items": {"type": "string"}, "description": "What to practise before next time"},
+    },
+}
+
+NOTES_SYSTEM = """You turn the transcript of a ballroom or Latin dance lesson into short notes for the dancers who were there.
+The transcript was made automatically from a phone or watch in a hall with music playing, so expect misheard words (for example "chase" for Chassé, "contra body" for CBM), counting along with the music, and other people's chatter.
+
+Pull out:
+- the figures taught or practised, using the exact names from the figure list given;
+- corrections and technique points (footwork, rise and fall, CBM, sway, frame, hold, Leader's and Follower's parts), each as one short instruction;
+- counts and timing;
+- homework: what to practise before the next lesson.
+
+Write in plain British English, briefly. Keep only what is about the dancing: leave out names other than the teacher's, and anything personal or private someone said. Don't invent points that aren't in the transcript."""
+
+
+def lesson_notes(transcript: str, context: str, who: int | None = None, purpose: str = "lesson-notes") -> dict:
+    prompt = "<lesson>\n" + context + "\n</lesson>\n\n<transcript>\n" + transcript[-200000:] + "\n</transcript>"
+    return _call(NOTES_SYSTEM, [{"role": "user", "content": prompt}], NOTES_SCHEMA, max_tokens=8000, effort="low",
+                 who=who, purpose=purpose)
