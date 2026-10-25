@@ -72,7 +72,8 @@ never use the society's name or branding.
 ## Commands
 - The VPS has 1 CPU and 3.8 GB, shared with other sites. Run anything heavy (test browsers, benchmarks, builds) via
   `deploy/limited.sh <cmd>` (own cgroup: 40% CPU, 900 MB, nice 19, idle IO); docker test runs get
-  `--cpus 0.5 --memory 900m`. Dev copy: `deploy/dev.sh` → https://chza.me/dance-dev/ (container `dance-dev`, capped,
+  `--cpus 0.5 --memory 900m`. Dev copy: `/opt/dance-dev` (git worktree on `3d-dancers`; `/opt/dance` stays on main because `deploy.sh`
+  rebuilds production from it), started with its `deploy/dev.sh` → https://chza.me/dance-dev/ (amber DEV bar via `ENV_LABEL`) (container `dance-dev`, capped,
   runs the working tree with reload, own DB in `data/dev`, `--fresh` recopies live, no Claude key).
 - Dev server: launch config `rise-dev` (port 8021). Tests: `cd backend && ./venv/bin/python -m pytest -q tests`.
 - Deploy: commit, then `./deploy/deploy.sh`. Live at https://chza.me/dance/ (container on 127.0.0.1:8031 behind
