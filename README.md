@@ -95,6 +95,6 @@ Everyone who has committed to this repo, plus anyone credited with a `Co-authore
 every push to `main` (`.github/workflows/contributors.yml`); to add yourself, commit.
 
 <!-- contributors:start -->
-- Charlie Britton (8 commits)
-- Claude Opus 5.5 (8 commits)
+- Charlie Britton (9 commits)
+- Claude Opus 5.5 (9 commits)
 <!-- contributors:end -->
