@@ -44,6 +44,8 @@ never use the society's name or branding.
 - Practice: "Room's way round" turns the diagrams with the phone's compass (set facing the centre, back to the wall;
   each Corner marker turns later figures a quarter left); spoken calls of the next figure; music from the device at
   the practice speed (Spotify can't change a track's speed).
+- `/terms` and `/privacy` (`views/legal.js`) must stay true to what the code stores and sends: update them with any
+  feature that collects, shares or keeps data differently.
 - Schema changes: new tables in `schema.sql`, new columns appended to `db.ADDED_COLUMNS`. Never reseed the live DB.
 
 ## Recordings

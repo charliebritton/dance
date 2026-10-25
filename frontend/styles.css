@@ -406,6 +406,11 @@ svg.floor .flnum.hot text { fill: var(--surface); }
 .foot { border-top: 1px solid var(--line); padding-block: 18px 28px; font-size: 13px; color: var(--muted); }
 .foot .wrap { display: flex; flex-wrap: wrap; gap: 6px 24px; }
 .foot span:first-child { font-family: var(--f-display); color: var(--ink); }
+.foot a { color: inherit; }
+.legal { max-width: 760px; line-height: 1.55; }
+.legal h2 { font-size: 18px; margin: 22px 0 6px; }
+.legal ul { padding-left: 20px; }
+.legal li { margin-bottom: 6px; }
 .acctlink { text-decoration: none; font-weight: 600; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--bar-fg) 40%, transparent); border-radius: var(--r); }
 .acctlink[aria-current="page"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .acct .btn.acc { color: var(--on-accent); }

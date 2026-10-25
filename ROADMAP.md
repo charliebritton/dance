@@ -26,6 +26,8 @@ What's live, what's on the `3d-dancers` branch (dev copy at https://chza.me/danc
 - **Lesson recordings**: upload or record, local Whisper transcription (niced), free rough notes, copy-for-Claude.
 - **Pre-rendered videos**: `render/worker.mjs` + `/api/render/jobs` (stale when a chart or the rig changes). Never on
   the VPS.
+- **Terms of use and privacy notice** (`/terms`, `/privacy`), security review fixes (login throttling, upload types,
+  security headers, production secret guard), `deploy/pull.sh` to deploy from GitHub.
 - **Ops**: `deploy/limited.sh` (cgroup caps for heavy jobs), `deploy/dev.sh` (capped dev copy), ENV_LABEL dev flag.
 
 ## Next
@@ -54,3 +56,42 @@ What's live, what's on the `3d-dancers` branch (dev copy at https://chza.me/danc
       confident segments as weak labels.
 - [ ] Full physics engine (e.g. Rapier) for balance and momentum once the kinematic model matches the data.
 - [ ] Render farm: `render/worker.mjs` on the NAS, then a GPU farm, pulling `/api/render/jobs`.
+
+## References (research, October 2026)
+Datasets checked for ballroom and Latin motion. Check each one's licence before using it; none was confirmed for
+redistribution.
+
+**Duet (partner) dance motion capture**
+- DD100: Siyao et al., *Duolando: Follower GPT with Off-Policy Reinforcement Learning for Dance Accompaniment*,
+  ICLR 2024. https://arxiv.org/abs/2403.18811 · code and data: https://github.com/lisiyao21/Duolando (SMPL-X `.npy`
+  per dancer, `_00` follower / `_01` leader, with music; data on Google Drive linked from the README; no data
+  licence stated). About 117 min, 10 genres: Cha Cha, Rumba, Samba, Paso Doble, Jive, Foxtrot, Tango, Quickstep,
+  Waltz (and ballet pas de deux).
+- MDD: *A Dataset for Text-and-Music Conditioned Duet Dance Generation*, arXiv 2508.16911.
+  https://arxiv.org/abs/2508.16911 · about 10–15 h of duet motion capture with text descriptions; Standard and Latin.
+  Download location and licence not confirmed.
+- InterDance: *Reactive 3D Dance Generation with Realistic Duet Interactions*, arXiv 2412.16982.
+  https://arxiv.org/abs/2412.16982 · about 3.9 h of duets across 15 genres including ballroom.
+- Dancing Points: *Synthesizing Ballroom Dancing with Three-Point Inputs* (Computer Graphics Forum).
+  https://arxiv.org/abs/2601.02096 · https://onlinelibrary.wiley.com/doi/10.1111/cgf.70588 · optical motion
+  capture of Viennese Waltz, Cha Cha, Foxtrot and others, 34-joint skeleton; public availability not stated.
+
+**Solo**
+- Waltz, Tango, Cha Cha and Rumba with music: https://github.com/Music-to-dance-motion-synthesis/dataset (cited as
+  Tang et al. in *Human Motion Generation: A Survey*, https://arxiv.org/abs/2307.10894; check it is the same data).
+- ChoreoNet (same four dances): https://github.com/abcyzj/ChoreoNet
+
+**Video to 3D motion (for our own videos and competition footage)**
+- WHAM: *Reconstructing World-grounded Humans with Accurate 3D Motion*, CVPR 2024. https://arxiv.org/abs/2312.07531
+  (moving camera via SLAM, contact-aware to reduce foot sliding; single person; research-only code).
+- GVHMR: *World-Grounded Human Motion Recovery via Gravity-View Coordinates*. https://arxiv.org/abs/2409.06662
+  (gravity-aligned world frame, foot/hand contact for less sliding; single person).
+- TRAM: global trajectory and body motion from in-the-wild video. https://arxiv.org/abs/2403.17346
+- 2D pose: RTMPose (MMPose) or MediaPipe Pose Landmarker (runs in the browser).
+
+**Models and assets**
+- Quaternius Universal Base Characters (CC0 on release; newer packs move to the Quaternius licence):
+  https://quaternius.itch.io/universal-base-characters
+- Rigged dancers to consider: Fab "Julie" https://fab.com/listings/3df5fc7f-adab-477c-b162-e89c95cdcd27 ·
+  CGTrader "Bromia 002" https://www.cgtrader.com/3d-models/character/woman/bromia-002 · Sketchfab (filter
+  Downloadable + Rigged; no rigged tails or ball gown found).

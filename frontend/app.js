@@ -8,9 +8,10 @@ import * as practice from "./views/practice.js";
 import * as lessons from "./views/lessons.js";
 import * as competitions from "./views/competitions.js";
 import * as admin from "./views/admin.js";
+import * as legal from "./views/legal.js";
 import { renderAccount, renderJoin, renderLogin } from "./views/auth.js";
 
-const VIEWS = { home, syllabus, routines, practice, lessons, competitions, admin };
+const VIEWS = { home, syllabus, routines, practice, lessons, competitions, admin, legal };
 const MEMBERS_ONLY = new Set(["routines", "practice", "lessons", "competitions", "admin", "account"]);
 let current = { view: "home", params: {} };
 
@@ -24,6 +25,7 @@ function parse() {
     case "lessons": return { view: "lessons", params: { id: b } };
     case "competitions": case "admin": case "account": case "login": return { view: a, params: {} };
     case "join": return { view: "join", params: { token: b } };
+    case "terms": case "privacy": return { view: "legal", params: { doc: a } };
     default: return { view: "syllabus", params: { dance: a, fig: b } };
   }
 }

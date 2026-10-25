@@ -2,9 +2,11 @@
 import json
 import secrets
 import shutil
+import time
+from collections import defaultdict, deque
 
 import webauthn
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from webauthn.helpers import base64url_to_bytes, bytes_to_base64url
 from webauthn.helpers.exceptions import InvalidAuthenticationResponse, InvalidRegistrationResponse
@@ -156,12 +158,37 @@ class LoginIn(BaseModel):
     password: str = Field(max_length=200)
 
 
+# Failed password sign-ins, per address and per name: a few tries, then a wait. Stops guessing, and stops a flood of
+# scrypt checks from tying up the server's one CPU. In memory: a restart forgets it, which is fine at this size.
+FAIL_WINDOW, FAIL_MAX = 15 * 60, 8
+_fails: dict[str, deque] = defaultdict(deque)
+
+
+def _too_many(*keys: str) -> bool:
+    now = time.monotonic()
+    for k in keys:
+        q = _fails[k]
+        while q and now - q[0] > FAIL_WINDOW:
+            q.popleft()
+        if len(q) >= FAIL_MAX:
+            return True
+    return False
+
+
 @router.post("/api/login")
-def login(body: LoginIn):
+def login(body: LoginIn, request: Request):
+    name = " ".join(body.name.split())
+    keys = ("ip:" + (request.client.host if request.client else "?"), "name:" + name.lower())
+    if _too_many(*keys):
+        raise HTTPException(429, "Too many tries. Wait a few minutes, or sign in with your passkey")
     with db.tx() as con:
-        row = con.execute("SELECT id, pw_hash FROM users WHERE name = ?", (" ".join(body.name.split()),)).fetchone()
+        row = con.execute("SELECT id, pw_hash FROM users WHERE name = ?", (name,)).fetchone()
     if not row or not row["pw_hash"] or not auth.check_password(body.password, row["pw_hash"]):
+        for k in keys:
+            _fails[k].append(time.monotonic())
         raise HTTPException(401, "That name and password don't match")
+    for k in keys:
+        _fails.pop(k, None)
     return auth.signed_in(row["id"])
 
 

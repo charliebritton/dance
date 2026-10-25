@@ -79,6 +79,8 @@ def add_recording(lid: str, file: UploadFile = File(...), keep_audio: bool = For
         raise HTTPException(415, "That isn't an audio file. Try m4a, mp3, wav, webm or ogg")
     rec_id = rid()
     name = rec_id + (ext if ext in AUDIO_EXT else ".audio")
+    if not mime.startswith(("audio/", "video/")):        # the stored (and later served) type is always audio
+        mime = "audio/mp4" if ext in (".m4a", ".mp4", ".aac") else "audio/mpeg" if ext == ".mp3" else "application/octet-stream"
     transcribe.audio_dir().mkdir(parents=True, exist_ok=True)
     dest = transcribe.audio_dir() / name
     limit, size = settings.max_audio_mb * 1024 * 1024, 0
@@ -129,7 +131,8 @@ def recording_audio(rec_id: str, u: dict = Member):
         r = _load(con, rec_id, u)
     if not r["file"]:
         raise HTTPException(404, "The audio was deleted after it was transcribed")
-    return FileResponse(transcribe.audio_dir() / r["file"], media_type=r["mime"] or None)
+    mime = r["mime"] if (r["mime"] or "").startswith(("audio/", "video/")) else "application/octet-stream"
+    return FileResponse(transcribe.audio_dir() / r["file"], media_type=mime)
 
 
 class KeepIn(BaseModel):

@@ -28,6 +28,9 @@ from config import ROOT, settings
 
 logging.basicConfig(level=logging.INFO)
 FRONTEND = ROOT / "frontend"
+if settings.secure_cookies and (settings.session_secret in ("", "changeme-too") or len(settings.session_secret) < 24):
+    raise SystemExit("SESSION_SECRET must be set to a long random value in production (anyone could sign session "
+                     "cookies with the placeholder). Generate one: python -c 'import secrets; print(secrets.token_urlsafe(32))'")
 app = FastAPI(title="Rise & Fall", docs_url=None, redoc_url=None)
 app.add_middleware(GZipMiddleware, minimum_size=2048)   # the syllabus with every chart is ~300 KB of JSON
 db.init()
@@ -45,6 +48,14 @@ async def revalidate_frontend(request: Request, call_next):
     resp = await call_next(request)
     if not path.startswith(("/api/", "/media/")):
         resp.headers["Cache-Control"] = "no-cache"
+    # security headers: no MIME sniffing, no framing by other sites, no full URLs leaking to other sites, and only
+    # the microphone (lesson recorder) and motion sensors (practice compass) for this site
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["X-Frame-Options"] = "SAMEORIGIN"
+    resp.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    resp.headers["Permissions-Policy"] = "camera=(), geolocation=(), microphone=(self), accelerometer=(self), gyroscope=(self), magnetometer=(self)"
+    if path.startswith("/media/") or "/recordings/" in path and path.endswith("/audio"):
+        resp.headers["Content-Security-Policy"] = "default-src 'none'; media-src 'self'; sandbox"
     return resp
 
 
@@ -350,6 +361,11 @@ def _check_video_ref(con, ref: str, u: dict):
     raise HTTPException(400, "Unknown figure, lesson or routine")
 
 
+# Uploaded videos keep one of these extensions and are always served as that video type, never as the uploader's
+# claimed type: a ".html" or ".svg" labelled as a video would otherwise run as a page on this site.
+VIDEO_TYPES = {".mp4": "video/mp4", ".m4v": "video/mp4", ".mov": "video/quicktime", ".webm": "video/webm"}
+
+
 @app.post("/api/videos")
 def add_video(ref: str = Form(...), title: str = Form(""), url: str = Form(""),
               file: UploadFile | None = File(None), u: dict = Member):
@@ -357,9 +373,9 @@ def add_video(ref: str = Form(...), title: str = Form(""), url: str = Form(""),
         _check_video_ref(con, ref, u)
     vid, t = rid(), db.now()
     if file is not None and file.filename:
-        if not (file.content_type or "").startswith("video/"):
-            raise HTTPException(415, "That isn't a video file. Try an MP4 or MOV")
-        ext = Path(file.filename).suffix.lower()[:6] or ".mp4"
+        ext = Path(file.filename).suffix.lower()
+        if not (file.content_type or "").startswith("video/") or ext not in VIDEO_TYPES:
+            raise HTTPException(415, "That isn't a video file. Try an MP4, MOV or WebM")
         name = f"{vid}{ext}"
         dest = settings.upload_dir / name
         limit, size = settings.max_upload_mb * 1024 * 1024, 0
@@ -371,7 +387,7 @@ def add_video(ref: str = Form(...), title: str = Form(""), url: str = Form(""),
                     dest.unlink(missing_ok=True)
                     raise HTTPException(413, f"Videos can be up to {settings.max_upload_mb} MB")
                 out.write(chunk)
-        row = (vid, ref, None, name, file.content_type, size, title.strip()[:120] or Path(file.filename).stem[:120], u["id"], t)
+        row = (vid, ref, None, name, VIDEO_TYPES[ext], size, title.strip()[:120] or Path(file.filename).stem[:120], u["id"], t)
     else:
         if not url.lower().startswith(("https://", "http://")):
             raise HTTPException(400, "Paste a full link starting with https://")
@@ -404,7 +420,7 @@ def media(name: str, u: dict = Member):
         v = con.execute("SELECT ref FROM videos WHERE file = ?", (name,)).fetchone()
         if v and v["ref"].startswith("routine:"):
             load_routine(con, v["ref"][8:], u)
-    return FileResponse(path)
+    return FileResponse(path, media_type=VIDEO_TYPES.get(path.suffix.lower(), "application/octet-stream"))
 
 
 # --- frontend ------------------------------------------------------------------
